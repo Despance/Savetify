@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "974680472249",
+    "project_id": "savetify",
+    "storage_bucket": "savetify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974680472249:android:24b2b98c92b5cc4bfab968",
+        "android_client_info": {
+          "package_name": "com.example.savetify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCt-oKCeSnIMslyRhq_PqEFyKbd8syWNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
