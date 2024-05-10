@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:savetify/main.dart';
-import 'package:savetify/expenses.dart';
+import 'package:savetify/widgets/expenses.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

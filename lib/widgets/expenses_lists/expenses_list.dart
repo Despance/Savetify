@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savetify/models/expense.dart';
+import 'package:savetify/widgets/expenses_lists/expense_item.dart';
 
 class ExpensesList extends StatelessWidget {
   const ExpensesList({super.key, required this.expenses});
@@ -10,7 +11,7 @@ class ExpensesList extends StatelessWidget {
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (BuildContext context, int index) =>
-          Text(expenses[index].title),
+          ExpenseItem(expense: expenses[index]),
     );
   }
 }
