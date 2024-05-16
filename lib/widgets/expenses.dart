@@ -1,5 +1,3 @@
-import 'dart:js_util';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:savetify/widgets/expenses_lists/expenses_list.dart';
@@ -69,10 +67,17 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (BuildContext ctx) {
-          return const NewExpense();
+          return NewExpense(onAddExpense: _addExpense);
         });
+  }
+
+  void _addExpense(Expense newExpense) {
+    setState(() {
+      _registeredExpenses.add(newExpense);
+    });
   }
 
   @override
