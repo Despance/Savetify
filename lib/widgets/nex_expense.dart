@@ -15,6 +15,22 @@ class _NewExpenseState extends State<NewExpense> {
   final _amountController = TextEditingController();
   Category _selectedCategory = Category.other;
   DateTime? _selectedDate;
+  @override
+  void initState() {
+    super.initState();
+    _amountController.addListener(_formatAmount);
+  }
+
+  void _formatAmount() {
+    final text = _amountController.text;
+    final newText = text.replaceAll(",", ".");
+    if (text != newText) {
+      _amountController.value = _amountController.value.copyWith(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+    }
+  }
 
   void _submitExpense() {
     final enteredTitle = _titleController.text;

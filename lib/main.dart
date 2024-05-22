@@ -2,5 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:savetify/widgets/expenses.dart';
 
 void main() {
-  runApp(const MaterialApp(home: Expenses()));
+  runApp(MaterialApp(
+      theme: ThemeData().copyWith(
+          scaffoldBackgroundColor: const Color.fromARGB(255, 235, 167, 247)),
+      home: const Expenses()));
 }
