@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:savetify/widgets/chart/chart.dart';
 import 'package:savetify/widgets/expenses_lists/expenses_list.dart';
 import 'package:savetify/models/expense.dart';
-import 'package:savetify/widgets/nex_expense.dart';
+import 'package:savetify/widgets/new_expense.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -28,31 +29,6 @@ class _ExpensesState extends State<Expenses> {
         amount: 1000.0,
         date: DateTime.now(),
         category: Category.housing),
-    Expense(
-        title: 'Netflix',
-        amount: 10.0,
-        date: DateTime.now(),
-        category: Category.subscriptions),
-    Expense(
-        title: 'Concert',
-        amount: 100.0,
-        date: DateTime.now(),
-        category: Category.entertainment),
-    Expense(
-        title: 'Other',
-        amount: 50.0,
-        date: DateTime.now(),
-        category: Category.other),
-    Expense(
-        title: 'dinner',
-        amount: 50.99,
-        date: DateTime.now(),
-        category: Category.other),
-    Expense(
-        title: 'lunch',
-        amount: 20.0,
-        date: DateTime.now(),
-        category: Category.other),
     Expense(
         title: 'breakfast',
         amount: 10.0,
@@ -111,6 +87,7 @@ class _ExpensesState extends State<Expenses> {
 
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 33, 251, 113),
           title: const Text('Expenses'),
           actions: [
             IconButton(
@@ -119,7 +96,26 @@ class _ExpensesState extends State<Expenses> {
             )
           ],
         ),
-        body: Column(
-            children: [const Text('The chart'), Expanded(child: maincontent)]));
+        body: Column(children: [
+          Chart(expenses: _registeredExpenses),
+          Expanded(child: maincontent)
+        ]));
+  }
+}
+
+class ExpenseBucket {
+  ExpenseBucket(this.expenses, this.category);
+  ExpenseBucket.forCategory(List<Expense> expenses, this.category)
+      : expenses =
+            expenses.where((expense) => expense.category == category).toList();
+
+  final Category category;
+  final List<Expense> expenses;
+  double get totalExpenses {
+    double sum = 0;
+    for (final expense in expenses) {
+      sum += expense.amount;
+    }
+    return expenses.fold(0.0, (sum, item) => sum + item.amount);
   }
 }

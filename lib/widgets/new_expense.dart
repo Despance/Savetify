@@ -101,9 +101,8 @@ class _NewExpenseState extends State<NewExpense> {
                   controller: _amountController,
                   decoration: const InputDecoration(
                       prefixText: '\$', labelText: 'Amount'),
-                  keyboardType: const TextInputType.numberWithOptions(
-                      decimal:
-                          true), // Virgülü almamak lazım buna bakkkkk!!!!!!!!
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                 ),
               ),
               const SizedBox(width: 8),

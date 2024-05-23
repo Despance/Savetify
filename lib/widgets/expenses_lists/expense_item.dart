@@ -7,13 +7,13 @@ class ExpenseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: const Color.fromARGB(255, 245, 208, 251),
+        color: const Color.fromARGB(255, 234, 0, 255),
         child: Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [
-                Color.fromARGB(255, 245, 208, 251), // Starting color
-                Color.fromARGB(255, 242, 145, 246), // Ending color
+                Color.fromARGB(255, 12, 221, 224), // Starting color
+                Color.fromARGB(255, 39, 179, 37), // Ending color
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomLeft,
@@ -24,8 +24,12 @@ class ExpenseItem extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(expense.title),
+                Text(
+                  expense.title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
