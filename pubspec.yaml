@@ -37,6 +37,9 @@ dependencies:
   google_sign_in: 
   google_sign_in_dartio: ^0.3.0
   lottie: ^3.1.2
+  cloud_firestore: 
+  flutter_form_builder: 
+
 
 dev_dependencies:
   flutter_test:

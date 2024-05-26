@@ -209,7 +209,11 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       SnackBar(content: Text('Error signing in with Google: $e'));
     }
-
+    if (userCredenitals != null) {
+      if (userCredenitals.additionalUserInfo!.isNewUser) {
+        Navigator.pushNamed(context, '/add_details');
+      }
+    }
     return userCredenitals;
   }
 
@@ -225,9 +229,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<UserCredential> _signInWithEmailAndPassword() async {
-    var userCredenitals = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
+    var userCredenitals =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
 
     return userCredenitals;
   }

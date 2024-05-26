@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+  const SignupPage({super.key});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -157,7 +157,7 @@ class _SignupPageState extends State<SignupPage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
-            controller: _passwordController,
+            controller: _confirmPasswordController,
             decoration: InputDecoration(
                 labelText: 'Confirm Password',
                 hintText: 'Enter your password again',
@@ -189,14 +189,23 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _signUpWithEmailAndPassword() async {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    if (userCredential.user != null) {
-      Navigator.of(context).pop();
+      if (userCredential.user != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/add_details', (route) => false);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
     }
   }
 }
