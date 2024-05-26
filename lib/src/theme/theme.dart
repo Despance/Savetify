@@ -16,6 +16,8 @@ class SavetifyTheme {
       bodyLarge: TextStyle(), // Default body text
     ),
     colorScheme: ColorScheme.fromSeed(
+      secondary: const Color.fromARGB(255, 49, 242, 226),
+      tertiary: const Color.fromARGB(255, 87, 81, 253),
       seedColor: const Color(0xFF4CAF50),
       brightness: Brightness.light,
     ),

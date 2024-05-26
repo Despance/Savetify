@@ -80,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Expanded buildSignInColumn(BuildContext context, BoxConstraints constraints) {
     return Expanded(
+        child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -117,8 +118,9 @@ class _LoginPageState extends State<LoginPage> {
             child: DividerWithText(text: 'or'),
           ),
           SignInButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100)),
             Buttons.google,
             onPressed: _signInWithGoogle,
           ),
@@ -137,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Column allTextFields() {
