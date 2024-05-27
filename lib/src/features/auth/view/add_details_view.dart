@@ -16,12 +16,13 @@ class AddDetailsView extends StatefulWidget {
 class _AddDetailsViewState extends State<AddDetailsView> {
   final _formKey = GlobalKey<FormBuilderState>();
 
-  late UserModel userModel;
+  UserModel? userModel;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+
     if (widget.user != null) {
       userModel = widget.user!;
     }
@@ -90,8 +91,8 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                   child: Column(
                     children: [
                       Text(
-                        userModel.name.isNotEmpty
-                            ? 'Welcome ${userModel.name}! Please edit in your details'
+                        userModel != null
+                            ? 'Welcome ${userModel!.name}! Please edit in your details'
                             : 'Please fill in your details',
                         style: const TextStyle(fontSize: 24),
                       ),
@@ -99,7 +100,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         padding: const EdgeInsets.all(20.0),
                         child: FormBuilderTextField(
                           name: 'name',
-                          initialValue: userModel.name,
+                          initialValue: userModel?.name,
                           decoration: const InputDecoration(
                             labelText: 'Name',
                           ),
@@ -110,7 +111,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         padding: const EdgeInsets.all(20.0),
                         child: FormBuilderTextField(
                           name: 'surname',
-                          initialValue: userModel.surname,
+                          initialValue: userModel?.surname,
                           decoration: const InputDecoration(
                             labelText: 'Surname',
                           ),
@@ -122,7 +123,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         child: dropDownBuilder(
                             'education_level',
                             'Education Level',
-                            userModel.educationLevel,
+                            userModel?.educationLevel,
                             [
                               'Middle School',
                               'High School',
@@ -137,7 +138,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         child: dropDownBuilder(
                           'investment_profile',
                           'Investment Profile',
-                          userModel.investmentProfile,
+                          userModel?.investmentProfile,
                           ['Conservative', 'Moderate', 'Aggressive'],
                           _requiredValidator,
                         ),
@@ -147,7 +148,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         child: dropDownBuilder(
                             'income',
                             'Monthly Income',
-                            userModel.income,
+                            userModel?.income,
                             [
                               'Less than 5000',
                               '5000 - 10000',
@@ -162,7 +163,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         child: dropDownBuilder(
                             'expense',
                             'Monthly Expenses (includes everything)',
-                            userModel.expense,
+                            userModel?.expense,
                             [
                               'Less than 5000',
                               '5000 - 10000',
@@ -176,7 +177,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                         padding: const EdgeInsets.all(20.0),
                         child: FormBuilderCheckboxGroup(
                           name: 'investment_types',
-                          initialValue: userModel.investmentTypes,
+                          initialValue: userModel?.investmentTypes,
                           decoration: const InputDecoration(
                               labelText: 'Preferred Investment Types'),
                           options: const [
@@ -238,7 +239,7 @@ class _AddDetailsViewState extends State<AddDetailsView> {
   FormBuilderDropdown<String> dropDownBuilder(
       String name,
       String label,
-      String initalValue,
+      String? initalValue,
       List<String> items,
       String? Function(String?)? validator) {
     return FormBuilderDropdown(
