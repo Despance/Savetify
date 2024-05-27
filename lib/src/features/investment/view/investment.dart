@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class InvestmentPage extends StatefulWidget {
   const InvestmentPage({Key? key}) : super(key: key);
 
@@ -11,6 +13,7 @@ class InvestmentPage extends StatefulWidget {
 }
 
 class _InvestmentPageState extends State<InvestmentPage> {
+  late SharedPreferences _prefs;
   final List<Map<String, String>> investments = [];
   final _formKey = GlobalKey<FormState>();
   String name = '';
@@ -19,26 +22,33 @@ class _InvestmentPageState extends State<InvestmentPage> {
   String unitPrice = '';
   String date = '';
   String selectedType = 'Unit Amount';
-  bool hideValues = false; // State for hiding investment values
-
-  final TextEditingController _unitAmountController = TextEditingController();
-  final TextEditingController _totalValueController = TextEditingController();
-  final TextEditingController _unitPriceController = TextEditingController();
-
-  double get totalInvestmentValue {
-    double total = 0.0;
-    for (var investment in investments) {
-      total += double.parse(investment['value']!);
-    }
-    return total;
-  }
 
   @override
-  void dispose() {
-    _unitAmountController.dispose();
-    _totalValueController.dispose();
-    _unitPriceController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadInvestments();
+  }
+
+  Future<void> _loadInvestments() async {
+  _prefs = await SharedPreferences.getInstance();
+  final List<String>? investmentList = _prefs.getStringList('investments');
+  if (investmentList != null) {
+    setState(() {
+      investments.clear();
+      investments.addAll(investmentList.map((json) => _decodeJson(json)));
+    });
+  }
+}
+
+Map<String, String> _decodeJson(String json) {
+  final Map<String, dynamic> decodedJson = jsonDecode(json);
+  return decodedJson.map((key, value) => MapEntry(key, value.toString()));
+}
+
+  Future<void> _saveInvestments() async {
+    final List<String> investmentStrings =
+        investments.map((investment) => jsonEncode(investment)).toList();
+    await _prefs.setStringList('investments', investmentStrings);
   }
 
   void _showInvestmentForm(BuildContext context,
@@ -58,10 +68,6 @@ class _InvestmentPageState extends State<InvestmentPage> {
       date = '';
       selectedType = 'Unit Amount';
     }
-
-    _unitAmountController.text = unitAmount;
-    _totalValueController.text = totalValue;
-    _unitPriceController.text = unitPrice;
 
     showDialog(
       context: context,
@@ -90,10 +96,9 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         onSaved: (value) => name = value!,
                       ),
                       TextFormField(
-                        controller: _unitPriceController,
+                        controller: TextEditingController(text: unitPrice),
                         decoration: const InputDecoration(
-                          labelText: 'Investment Unit Price (\$)',
-                        ),
+                            labelText: 'Investment Unit Price (\$)'),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -102,12 +107,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                           return null;
                         },
                         onChanged: (value) {
-                          _unitPriceController.value =
-                              _unitPriceController.value.copyWith(
-                            text: value.replaceAll(',', '.'),
-                          );
+                          unitPrice = value;
                         },
-                        onSaved: (value) => unitPrice = value!,
                       ),
                       const SizedBox(height: 10),
                       DropdownButtonFormField<String>(
@@ -124,24 +125,21 @@ class _InvestmentPageState extends State<InvestmentPage> {
                             selectedType = newValue!;
                             if (selectedType == 'Unit Amount') {
                               totalValue = '';
-                              _totalValueController.clear();
                             } else {
                               unitAmount = '';
-                              _unitAmountController.clear();
                             }
                           });
                         },
                         decoration: const InputDecoration(
-                          labelText: 'Select Input Type',
-                        ),
+                            labelText: 'Select Input Type'),
                       ),
                       const SizedBox(height: 10),
                       selectedType == 'Unit Amount'
                           ? TextFormField(
-                              controller: _unitAmountController,
+                              controller:
+                                  TextEditingController(text: unitAmount),
                               decoration: const InputDecoration(
-                                labelText: 'Unit Amount',
-                              ),
+                                  labelText: 'Unit Amount'),
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -150,18 +148,14 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                 return null;
                               },
                               onChanged: (value) {
-                                _unitAmountController.value =
-                                    _unitAmountController.value.copyWith(
-                                  text: value.replaceAll(',', '.'),
-                                );
+                                unitAmount = value;
                               },
-                              onSaved: (value) => unitAmount = value!,
                             )
                           : TextFormField(
-                              controller: _totalValueController,
+                              controller:
+                                  TextEditingController(text: totalValue),
                               decoration: const InputDecoration(
-                                labelText: 'Total Value (\$)',
-                              ),
+                                  labelText: 'Total Value (\$)'),
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -170,12 +164,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                 return null;
                               },
                               onChanged: (value) {
-                                _totalValueController.value =
-                                    _totalValueController.value.copyWith(
-                                  text: value.replaceAll(',', '.'),
-                                );
+                                totalValue = value;
                               },
-                              onSaved: (value) => totalValue = value!,
                             ),
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Date'),
@@ -186,7 +176,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
+                            lastDate: DateTime.now(),
                           );
                           if (pickedDate != null) {
                             setState(() {
@@ -229,8 +219,6 @@ class _InvestmentPageState extends State<InvestmentPage> {
                       totalValue = calculatedValue.toStringAsFixed(2);
                     } else {
                       calculatedValue = double.parse(totalValue);
-                      unitAmount = (calculatedValue / double.parse(unitPrice))
-                          .toStringAsFixed(2); // Unit amount calculation
                     }
 
                     if (index != null) {
@@ -240,7 +228,6 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         'totalValue': totalValue,
                         'unitPrice': unitPrice,
                         'date': date,
-                        'value': calculatedValue.toStringAsFixed(2),
                       };
                     } else {
                       investments.add({
@@ -249,9 +236,9 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         'totalValue': totalValue,
                         'unitPrice': unitPrice,
                         'date': date,
-                        'value': calculatedValue.toStringAsFixed(2),
                       });
                     }
+                    _saveInvestments();
                   });
                   Navigator.of(context).pop();
                 }
@@ -283,6 +270,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
               onPressed: () {
                 setState(() {
                   investments.removeAt(index);
+                  _saveInvestments();
                 });
                 Navigator.of(context).pop();
               },
@@ -297,20 +285,17 @@ class _InvestmentPageState extends State<InvestmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Investments'),
-            IconButton(
-              icon: Icon(hideValues ? Icons.visibility_off : Icons.visibility),
-              onPressed: () {
-                setState(() {
-                  hideValues = !hideValues;
-                });
-              },
-            ),
-          ],
-        ),
+        title: const Text('Investments'),
+        actions: [
+          IconButton(
+            icon: const Icon(CupertinoIcons.add),
+            onPressed: () => _showInvestmentForm(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadInvestments,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -318,11 +303,14 @@ class _InvestmentPageState extends State<InvestmentPage> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width / 2,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.secondary,
-                Theme.of(context).colorScheme.tertiary,
-              ], transform: const GradientRotation(pi / 4)),
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
+                  Theme.of(context).colorScheme.tertiary,
+                ],
+                transform: const GradientRotation(pi / 4),
+              ),
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
@@ -345,9 +333,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  hideValues
-                      ? '***'
-                      : "\$ ${totalInvestmentValue.toStringAsFixed(2)}",
+                  "${totalInvestmentValue.toStringAsFixed(2)}",
                   style: const TextStyle(
                     fontSize: 35,
                     color: Colors.white,
@@ -371,12 +357,10 @@ class _InvestmentPageState extends State<InvestmentPage> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                            hideValues ? 'Unit Amount: ***' : 'Unit Amount: \$${investment['unitAmount']}'),
-                        Text('Unit Price: \$${investment['unitPrice']}'),
+                        Text('Unit Amount: ${investment['unitAmount']}'),
+                        Text('Unit Price: ${investment['unitPrice']}'),
                         Text('Date: ${investment['date']}'),
-                        Text(
-                            hideValues ? 'Total Value: ***' : 'Total Value: \$${investment['value']}'),
+                        Text('Total Value: ${investment['totalValue']}'),
                       ],
                     ),
                     trailing: Row(
@@ -402,5 +386,12 @@ class _InvestmentPageState extends State<InvestmentPage> {
       ),
     );
   }
-}
 
+  double get totalInvestmentValue {
+    double total = 0.0;
+    for (var investment in investments) {
+      total += double.parse(investment['totalValue']!);
+    }
+    return total;
+  }
+}
