@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
 import 'package:savetify/src/features/auth/view/add_details_view.dart';
 import 'package:savetify/src/features/auth/view/auth_view.dart';
+import 'package:savetify/src/features/profile/view/profile_view.dart';
 import 'package:savetify/src/theme/theme.dart';
 import 'src/core/firebase_options.dart';
 import 'src/features/auth/view/sign_in_view.dart';
@@ -53,8 +54,8 @@ class MyApp extends StatelessWidget {
               '/login': (context) => const LoginPage(),
               '/signup': (context) => const SignupPage(),
               '/add_details': (context) => const AddDetailsView(),
-              '/home': (context) =>
-                  Scaffold(body: AppBar(title: const Text('Home'))),
+              '/profile': (context) => const ProfileView(),
+              '/auth': (context) => const AuthView(),
             },
             title: 'Savetify',
             theme: SavetifyTheme.lightTheme,
