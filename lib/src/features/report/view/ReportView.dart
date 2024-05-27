@@ -1,10 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/invesment/model/InvestmentModel.dart';
 import 'package:savetify/src/features/invesment/model/PortfolioModel.dart';
-import 'package:savetify/src/features/report/model/InvestmentData.dart';
+import 'package:savetify/src/features/report/model/GraphData.dart';
+import 'dart:math';
 
 import 'package:savetify/src/features/report/view_model/ReportViewModel.dart';
 
@@ -104,32 +108,121 @@ class _ReportViewState extends State<ReportView> {
                         "Creation Date: ${_formatDate(_reportViewModel.getCreationDate(index))}"),
                   ),
                 ),
-                AspectRatio(
-                  aspectRatio: 1.7,
-                  child: LineChart(
-                    LineChartData(
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: const [
-                            FlSpot(0, 3),
-                            FlSpot(1, 4),
-                            FlSpot(2, 3),
-                            FlSpot(3, 5),
-                            FlSpot(4, 4),
-                            FlSpot(5, 6),
-                          ],
-                          barWidth: 4,
-                          isCurved: true,
-                          preventCurveOverShooting: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                createInvestmentGraphs(index),
+                createExpenseGraphs(index),
               ],
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget createExpenseGraphs(int index) {
+    DateTime startingDate = _reportViewModel.getStartingDate(index);
+    DateTime endingDate = _reportViewModel.getEndingDate(index);
+    List<ExpenseModel> expenses =
+        _reportViewModel.getExpenseForTime(startingDate, endingDate);
+    expenses.sort((a, b) => a.date.compareTo(b.date));
+
+    double totalExpenses = 0.0;
+    for (var i = 0; i < expenses.length; i++) {
+      totalExpenses += expenses[i].amount;
+    }
+
+    List<BarChartGroupData> barGroups = [];
+
+    for (var i = 0; i < expenses.length; i++) {
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: expenses[i].amount,
+            ),
+          ],
+        ),
+      );
+    }
+    if (barGroups.isEmpty) {
+      return const Text("No expenses available");
+    }
+    return Card(
+      elevation: 4,
+      child: Column(
+        children: [
+          AspectRatio(
+            aspectRatio: 1.7,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 16.0, bottom: 16.0, right: 32.0, left: 32.0),
+              child: BarChart(
+                BarChartData(
+                  barGroups: [
+                    ...barGroups,
+                  ],
+                  titlesData: const FlTitlesData(
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      axisNameWidget: Text('Expenses'),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  gridData: const FlGridData(
+                    show: false,
+                  ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: const Border(
+                      bottom: BorderSide(
+                        color: Colors.black,
+                        width: 1,
+                      ),
+                      left: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                      ),
+                      right: BorderSide(
+                        color: Colors.transparent,
+                      ),
+                      top: BorderSide(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  barTouchData: BarTouchData(
+                    touchTooltipData: BarTouchTooltipData(
+                      tooltipRoundedRadius: 0,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        return BarTooltipItem(
+                          // ignore: prefer_interpolation_to_compose_strings
+                          rod.toY.toString() +
+                              '\n' +
+                              _formatDate(expenses[groupIndex].date) +
+                              '\n' +
+                              expenses[groupIndex].category,
+                          const TextStyle(color: Colors.black),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Text("Total Expenses: ${totalExpenses.toStringAsFixed(2)}"),
+          ),
+        ],
       ),
     );
   }
@@ -156,33 +249,120 @@ class _ReportViewState extends State<ReportView> {
     );
   }
 
-  //TODO: implement method to create tables using the function below for data, then put this in the reportDetailsScreen
-  List<FlSpot> getFlSpotForInvestmentData(
-      int reportIndex, String portfolioName, String investmentName) {
-    InvestmentData investmentData = _reportViewModel
-        .getPortfolioInvestmentData(reportIndex, portfolioName)
-        .firstWhere((element) => element.name == investmentName);
-    InvestmentModel investmentModel = _reportViewModel
-        .getPortfolio(reportIndex, portfolioName)
-        .getInvestments
-        .firstWhere((element) => element.name == investmentName);
-
-    List<FlSpot> flSpots = [];
-    int length = investmentData.priceOverTime.length;
-    for (int i = 0; i < length; i++) {
-      if (investmentModel.dateOfPurchase
-          .isAfter(investmentData.priceOverTime[i].date)) {
-        flSpots.add(FlSpot(
-            investmentData.priceOverTime[i].date
-                .difference(investmentModel.dateOfPurchase)
-                .inDays
-                .toDouble(),
-            investmentData.priceOverTime[i].price *
-                investmentModel.quantity *
-                investmentModel.price));
+  Widget createInvestmentGraphs(int reportIndex) {
+    List<Widget> graphs = [];
+    List<PortfolioModel> portfolios =
+        _reportViewModel.getReports[reportIndex].getPortfolios;
+    for (var i = 0; i < portfolios.length; i++) {
+      List<InvestmentModel> investments = portfolios[i].getInvestments;
+      graphs.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            portfolios[i].getPortfolioName,
+            style: const TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+      for (var j = 0; j < investments.length; j++) {
+        List<GraphData> graphData = _reportViewModel.getGraphDataForInvestment(
+            reportIndex, portfolios[i].getPortfolioName, investments[j].name);
+        List<FlSpot> flSpots = graphData.map((e) => e.spot).toList();
+        if (flSpots.isEmpty) {
+          continue;
+        }
+        graphs.add(
+          Card(
+            elevation: 4,
+            child: Column(
+              children: [
+                AspectRatio(
+                  aspectRatio: 1.7,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, bottom: 16.0, right: 32.0, left: 32.0),
+                    child: LineChart(
+                      LineChartData(
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: flSpots,
+                            barWidth: 4,
+                            isCurved: true,
+                            preventCurveOverShooting: true,
+                          ),
+                        ],
+                        titlesData: FlTitlesData(
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          leftTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: AxisTitles(
+                            axisNameWidget: Text(investments[j].name),
+                            sideTitles: const SideTitles(showTitles: false),
+                          ),
+                          bottomTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        gridData: const FlGridData(
+                          show: false,
+                        ),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: const Border(
+                            bottom: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            left: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            right: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                            top: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        lineTouchData: LineTouchData(
+                          touchTooltipData: LineTouchTooltipData(
+                              getTooltipItems: (touchedSpots) {
+                            return touchedSpots.map((LineBarSpot touchedSpot) {
+                              return LineTooltipItem(
+                                // ignore: prefer_interpolation_to_compose_strings
+                                touchedSpot.y.toStringAsFixed(2).toString() +
+                                    "\n" +
+                                    _formatDate(graphData
+                                        .elementAt(flSpots.indexOf(FlSpot(
+                                            touchedSpot.x, touchedSpot.y)))
+                                        .date),
+                                const TextStyle(color: Colors.black),
+                              );
+                            }).toList();
+                          }),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Text("Net Profit: ${flSpots.last.y - flSpots.first.y}"),
+                Text(
+                    "ROI: ${((flSpots.last.y - flSpots.first.y) / flSpots.first.y).toStringAsFixed(2)}"),
+                Text(
+                    "CAGR: ${(pow((flSpots.last.y / flSpots.first.y), (1 / (graphData.last.date.difference(graphData.first.date).inDays / 365))) - 1).toStringAsFixed(2)}"),
+              ],
+            ),
+          ),
+        );
       }
     }
-    return flSpots;
+    return Column(
+      children: graphs,
+    );
   }
 
   Widget addReportScreen() {

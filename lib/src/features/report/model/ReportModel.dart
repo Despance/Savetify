@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:savetify/src/features/invesment/model/PortfolioModel.dart';
 import 'package:savetify/src/features/report/model/InvestmentData.dart';
 
@@ -12,7 +13,7 @@ class ReportModel {
   List<PortfolioModel> portfolios = [];
 
   ReportModel();
-  
+
   ReportModel.createReport(this.title, this.description,
       this.reportSartingDateTime, this.reportEndingDateTime, this.portfolios);
 
@@ -22,6 +23,24 @@ class ReportModel {
 
   void setDescription(String description) {
     this.description = description;
+  }
+  // TODO: 
+  saveReport() {
+    try{
+      FirebaseFirestore.instance.collection('userReports').doc('User').collection('reports').add({
+        'userId': userId,
+        'title': title,
+        'description': description,
+        'creationDateTime': creationDateTime,
+        'reportSartingDateTime': reportSartingDateTime,
+        'reportEndingDateTime': reportEndingDateTime,
+        'portfolios': portfolios
+      });
+      
+    }
+    catch (e) {
+      print(e);
+    }
   }
 
   List<PortfolioModel> get getPortfolios => portfolios;

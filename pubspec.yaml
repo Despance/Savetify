@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   provider:
   firebase_core: ^2.30.1
+  cloud_firestore:
   fl_chart: ^0.68.0
   multi_select_flutter:
 
