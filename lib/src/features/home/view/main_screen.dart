@@ -23,24 +23,29 @@ class MainScreen extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              height: 55,
-                              width: 55,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: SavetifyTheme
-                                    .lightTheme.secondaryHeaderColor,
+                        GestureDetector(
+                          onTap: () {
+                            print("Profile");
+                          },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                height: 55,
+                                width: 55,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: SavetifyTheme
+                                      .lightTheme.secondaryHeaderColor,
+                                ),
                               ),
-                            ),
-                            Icon(
-                              CupertinoIcons.person_fill,
-                              color: SavetifyTheme.lightTheme.primaryColor,
-                              size: 35,
-                            ),
-                          ],
+                              Icon(
+                                CupertinoIcons.person_fill,
+                                color: SavetifyTheme.lightTheme.primaryColor,
+                                size: 35,
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     ),
@@ -227,7 +232,9 @@ class MainScreen extends StatelessWidget {
                                     .lightTheme.secondaryHeaderColor)),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          print("See All");
+                        },
                         child: Text("See all",
                             textAlign: TextAlign.start,
                             style: TextStyle(

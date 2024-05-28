@@ -18,8 +18,10 @@ class AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
+    return GestureDetector(
+      onTap: () {
+        print("tapped");
+      },
       child: Card(
         color: Colors.grey[600],
         shape: RoundedRectangleBorder(

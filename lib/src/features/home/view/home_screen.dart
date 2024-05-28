@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/report/view_model/stats.dart';
 import 'package:savetify/src/theme/theme.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     MainScreen(),
     StatScreen(),
   ];
-  int index = 1;
+  int index = 0;
   late Color selectedColor;
   Color unselectedColor = Colors.grey;
 
@@ -64,7 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return const AddExpense();
+          }));
+        },
         shape: const CircleBorder(),
         child: Container(
           alignment: Alignment.center,
