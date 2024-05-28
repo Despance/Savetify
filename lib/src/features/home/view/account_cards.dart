@@ -23,7 +23,7 @@ class AccountCard extends StatelessWidget {
         print("tapped");
       },
       child: Card(
-        color: Colors.grey[600],
+        color: const Color.fromARGB(255, 175, 34, 34),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),

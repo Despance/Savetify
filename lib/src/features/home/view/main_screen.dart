@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:savetify/src/features/data/data.dart';
 import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
+import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/account_cards.dart';
 import 'package:savetify/src/features/profile/model/user.dart';
 import 'package:savetify/src/features/profile/view/profile_view.dart';
@@ -71,14 +72,12 @@ class _MainScreenState extends State<MainScreen> {
                                             width: 55,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: SavetifyTheme.lightTheme
-                                                  .secondaryHeaderColor,
+                                              color: Colors.lightBlue[100],
                                             ),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             CupertinoIcons.person_fill,
-                                            color: SavetifyTheme
-                                                .lightTheme.primaryColor,
+                                            color: Colors.black,
                                             size: 35,
                                           ),
                                         ],
@@ -120,8 +119,8 @@ class _MainScreenState extends State<MainScreen> {
                                 const BorderRadius.all(Radius.circular(40)),
                             gradient: LinearGradient(
                               colors: [
-                                const Color.fromARGB(255, 87, 81, 253),
-                                const Color.fromARGB(255, 49, 242, 226),
+                                const Color.fromARGB(255, 96, 91, 255),
+                                const Color.fromARGB(239, 108, 247, 247),
                                 SavetifyTheme.lightTheme.primaryColor,
                               ],
                               transform: const GradientRotation(pi / 4),
@@ -277,113 +276,7 @@ class _MainScreenState extends State<MainScreen> {
                                             .getExpenses()
                                             .length,
                                         itemBuilder: (context, int i) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 16),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[600],
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(16.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Stack(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          children: [
-                                                            Container(
-                                                              width: 50,
-                                                              height: 50,
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Colors
-                                                                    .white30,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width: 30,
-                                                              height: 30,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                image:
-                                                                    DecorationImage(
-                                                                  image: AssetImage(
-                                                                      'lib/src/assets/${expenseRepository!.getExpenses()[i].category}.png'),
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 10),
-                                                        Text(
-                                                          expenseRepository!
-                                                              .getExpenses()[i]
-                                                              .category,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: Colors
-                                                                      .white),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        Text(
-                                                          expenseRepository!
-                                                              .getExpenses()[i]
-                                                              .amount
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: Colors
-                                                                      .white),
-                                                        ),
-                                                        Text(
-                                                          expenseRepository!
-                                                              .getExpenses()[i]
-                                                              .date
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                  color: Colors
-                                                                      .white),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
+                                          return ExpenseCard(i);
                                         }),
                               ),
                             ],
@@ -393,6 +286,82 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   );
           }),
+    );
+  }
+
+  Widget ExpenseCard(int i) {
+    return GestureDetector(
+      onTap: () {},
+      child: Card(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(77, 255, 255, 255),
+                          ),
+                        ),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  'lib/src/assets/${expenseRepository!.getExpenses()[i].category}.png'),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      expenseRepository!.getExpenses()[i].category,
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      expenseRepository!.getExpenses()[i].amount.toString(),
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                    Text(
+                      expenseRepository!.getExpenses()[i].date.toString(),
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
