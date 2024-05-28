@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const AddExpense();
+            return AddExpense();
           }));
         },
         shape: const CircleBorder(),
