@@ -8,7 +8,6 @@ import 'package:savetify/src/features/report/model/ReportModel.dart';
 import 'package:savetify/src/features/report/model/ReportRepository.dart';
 
 class ReportViewModel {
-
   List<ReportModel> _reportModel = [];
   late ReportRepository _reportRepository;
 
@@ -130,8 +129,9 @@ class ReportViewModel {
   getExpenseForTime(DateTime startingDate, DateTime endingDate) {
     List<ExpenseModel> expenses = _reportRepository.getExpenses();
     List<ExpenseModel> newExpenses = [];
-    for(ExpenseModel expense in expenses){
-      if(expense.date.isAfter(startingDate) && expense.date.isBefore(endingDate)){
+    for (ExpenseModel expense in expenses) {
+      if (expense.date.isAfter(startingDate) &&
+          expense.date.isBefore(endingDate)) {
         newExpenses.add(expense);
       }
     }
