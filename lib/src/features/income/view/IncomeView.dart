@@ -14,19 +14,16 @@ class IncomePage extends StatefulWidget {
 
 class _IncomePageState extends State<IncomePage> {
   final IncomeViewModel incomeViewModel = IncomeViewModel();
-
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
-  late DateTime _selectedStartingDate;
-
+  late DateTime _selectedDate;
   @override
   void initState() {
     super.initState();
 
     _descriptionController = TextEditingController();
     _amountController = TextEditingController();
-    _selectedStartingDate = DateTime.now();
-
+    _selectedDate = DateTime.now();
     // TODO: implement initState
   }
 
@@ -70,13 +67,23 @@ class _IncomePageState extends State<IncomePage> {
       MaterialPageRoute(
         builder: (context) => addIncomeScreen(),
       ),
-    );
+    ).then((value) => {
+          _descriptionController.clear(),
+          _amountController.clear(),
+          _selectedDate = DateTime.now(),
+        });
   }
 
   List<Widget> getIncomes() {
     if (incomeViewModel.getIncomes().isEmpty) {
       return [
-        const Text("No investments found"),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text("No incomes found. Please add some incomes.",
+              style: TextStyle(
+                  fontSize: 12, color: Theme.of(context).primaryColor),
+              textAlign: TextAlign.center),
+        ),
       ];
     } else {
       return [
@@ -85,7 +92,7 @@ class _IncomePageState extends State<IncomePage> {
             key: Key(income.id!),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
-              incomeViewModel.deleteIncome(income);
+              incomeViewModel.deleteIncomeFromFirebase(income);
               setState(() {});
             },
             child: Card(
@@ -131,21 +138,19 @@ class _IncomePageState extends State<IncomePage> {
               ),
             ),
             TextButton(
-              onPressed: () async =>
-                  _selectedStartingDate = await _selectDate(),
+              onPressed: () async => _selectedDate = await _selectDate(),
               child: const Text("Select Start Date"),
             ),
             TextButton(
               onPressed: () => {
-                //TODO: Add the income to the database
                 if (_descriptionController.text.isNotEmpty &&
                     _amountController.text.isNotEmpty)
                   {
-                    incomeViewModel.setIncomesFromFirebase(
+                    incomeViewModel.addIncomesToFirebase(
                       IncomeModel(
                           description: _descriptionController.text,
                           amount: double.parse(_amountController.text),
-                          date: _selectedStartingDate),
+                          date: _selectedDate),
                     ),
                   },
                 Navigator.pop(context),

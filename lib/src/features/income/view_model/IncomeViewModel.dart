@@ -9,7 +9,7 @@ class IncomeViewModel {
     _incomeRepository.getIncomes();
   }
 
-  Future<void> setIncomesFromFirebase(IncomeModel incomeModel) async {
+  Future<void> addIncomesToFirebase(IncomeModel incomeModel) async {
     await _incomeRepository.addToFireBase(incomeModel);
   }
 
@@ -21,10 +21,8 @@ class IncomeViewModel {
     return totalIncome;
   }
 
-  void deleteIncome(IncomeModel incomeModel) async {
-    _incomeRepository.deleteIncome(incomeModel);
-
-    await _incomeRepository.getIncomesFromFirebase();
+  void deleteIncomeFromFirebase(IncomeModel incomeModel) async {
+    await _incomeRepository.deleteIncomeFromFirebase(incomeModel);
     _incomeRepository.getIncomes();
   }
 
