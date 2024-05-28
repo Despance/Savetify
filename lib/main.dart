@@ -8,6 +8,7 @@ import 'package:savetify/src/features/auth/view/auth_view.dart';
 import 'package:savetify/src/features/profile/view/profile_view.dart';
 import 'package:savetify/src/theme/theme.dart';
 import 'package:savetify/src/features/home/view/HomePageView.dart';
+import 'package:savetify/app.dart';
 import 'src/core/firebase_options.dart';
 import 'src/features/auth/view/sign_in_view.dart';
 import 'src/features/auth/view/sign_up_view.dart';
