@@ -71,14 +71,12 @@ class _MainScreenState extends State<MainScreen> {
                                             width: 55,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: SavetifyTheme.lightTheme
-                                                  .secondaryHeaderColor,
+                                              color: Colors.lightBlue[100],
                                             ),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             CupertinoIcons.person_fill,
-                                            color: SavetifyTheme
-                                                .lightTheme.primaryColor,
+                                            color: Colors.black,
                                             size: 35,
                                           ),
                                         ],
@@ -120,8 +118,8 @@ class _MainScreenState extends State<MainScreen> {
                                 const BorderRadius.all(Radius.circular(40)),
                             gradient: LinearGradient(
                               colors: [
-                                const Color.fromARGB(255, 87, 81, 253),
-                                const Color.fromARGB(255, 49, 242, 226),
+                                const Color.fromARGB(255, 96, 91, 255),
+                                const Color.fromARGB(239, 108, 247, 247),
                                 SavetifyTheme.lightTheme.primaryColor,
                               ],
                               transform: const GradientRotation(pi / 4),
@@ -282,7 +280,7 @@ class _MainScreenState extends State<MainScreen> {
                                                 bottom: 16),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                color: Colors.grey[600],
+                                                color: Colors.lightBlue[100],
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
@@ -307,8 +305,12 @@ class _MainScreenState extends State<MainScreen> {
                                                                   const BoxDecoration(
                                                                 shape: BoxShape
                                                                     .circle,
-                                                                color: Colors
-                                                                    .white30,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        77,
+                                                                        255,
+                                                                        255,
+                                                                        255),
                                                               ),
                                                             ),
                                                             Container(
@@ -339,8 +341,12 @@ class _MainScreenState extends State<MainScreen> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
-                                                                  color: Colors
-                                                                      .white),
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          0,
+                                                                          0)),
                                                         ),
                                                       ],
                                                     ),
@@ -360,8 +366,12 @@ class _MainScreenState extends State<MainScreen> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
-                                                                  color: Colors
-                                                                      .white),
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          0,
+                                                                          0)),
                                                         ),
                                                         Text(
                                                           expenseRepository!
@@ -374,8 +384,12 @@ class _MainScreenState extends State<MainScreen> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w300,
-                                                                  color: Colors
-                                                                      .white),
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          0,
+                                                                          0)),
                                                         ),
                                                       ],
                                                     )

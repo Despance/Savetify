@@ -80,10 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
             gradient: LinearGradient(
               colors: [
                 SavetifyTheme.lightTheme.primaryColor,
-                const Color.fromARGB(255, 49, 242, 226),
-                const Color.fromARGB(255, 87, 81, 253)
+                const Color.fromARGB(239, 108, 247, 247),
+                const Color.fromARGB(255, 96, 91, 255),
               ],
-              transform: const GradientRotation(pi / 4),
+              transform: const GradientRotation(pi / 5),
             ),
           ),
           child: const Icon(CupertinoIcons.add),
