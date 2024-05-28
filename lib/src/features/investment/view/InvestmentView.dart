@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
-import 'package:savetify/src/features/investment/model/PortfolioModel.dart';
+import 'package:savetify/src/features/investment/model/InvestmentRepository.dart';
 import 'package:savetify/src/features/investment/view_model/InvestmentViewModel.dart';
 
 class InvestmentPage extends StatefulWidget {
@@ -15,13 +14,14 @@ class InvestmentPage extends StatefulWidget {
 class _InvestmentPageState extends State<InvestmentPage> {
   final _formKey = GlobalKey<FormState>();
 
+  late InvestmentViewModel viewModel;
+
   late TextEditingController _nameController;
   late TextEditingController _unitAmountController;
   late TextEditingController _totalValueController;
   late TextEditingController _unitPriceController;
   String _date = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String selectedType = 'Unit Amount';
-  // bool _obscureTotalValue = false;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
     _unitAmountController = TextEditingController();
     _totalValueController = TextEditingController();
     _unitPriceController = TextEditingController();
-    Provider.of<InvestmentViewModel>(context, listen: false).loadInvestmentModels();
+    viewModel = InvestmentViewModel(InvestmentModelRepository());
   }
 
   @override
@@ -197,7 +197,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
             ),
             TextButton(
               child: const Text('Save'),
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   final newInvestment = InvestmentModel(
                     name: _nameController.text,
@@ -211,12 +211,11 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         : _totalValueController.text,
                   );
                   if (investment != null && index != null) {
-                    Provider.of<InvestmentViewModel>(context, listen: false)
-                        .updateInvestmentModel(index, newInvestment);
+                    await viewModel.updateInvestmentModel(investment.id!, newInvestment);
                   } else {
-                    Provider.of<InvestmentViewModel>(context, listen: false)
-                        .addInvestmentModel(newInvestment);
+                    await viewModel.addInvestmentModel(newInvestment);
                   }
+                  setState(() {}); // To update the UI after saving
                   Navigator.of(context).pop();
                 }
               },
@@ -239,40 +238,54 @@ class _InvestmentPageState extends State<InvestmentPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          InvestmentPortfolio(),
-          Expanded(
-            child: Consumer<InvestmentViewModel>(
-              builder: (context, viewModel, child) {
-                return ListView.builder(
+      body: FutureBuilder(
+        future: viewModel.loadInvestmentModels(),
+        builder: (context, snapshot) {
+          return snapshot.connectionState == ConnectionState.waiting ? CircularProgressIndicator() : Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
                   itemCount: viewModel.investmentModels.length,
                   itemBuilder: (context, index) {
                     final investment = viewModel.investmentModels[index];
-                    return ListTile(
-                      title: Text(investment.name),
-                      subtitle: Text('Value: \$${investment.value}'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => _showInvestmentForm(context,
-                                investment: investment, index: index),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => viewModel.deleteInvestmentModel(index),
-                          ),
-                        ],
+                    return Card(
+                      margin: const EdgeInsets.all(10),
+                      child: ListTile(
+                        title: Text(investment.name),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Unit Amount: ${investment.unitAmount}'),
+                            Text('Unit Price: \$${investment.unitPrice}'),
+                            Text('Total Value: \$${investment.value}'),
+                            Text('Date: ${investment.date}'),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => _showInvestmentForm(context,
+                                  investment: investment, index: index),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () async {
+                                await viewModel.deleteInvestmentModel(index);
+                                setState(() {}); // To update the UI after deletion
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        }
       ),
     );
   }

@@ -1,25 +1,66 @@
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class InvestmentModelRepository {
   static const String _investmentModelsKey = 'investmentModels';
-  late SharedPreferences _prefs;
-
-  Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
 
   Future<List<InvestmentModel>> getInvestmentModels() async {
-    final investmentModelList = _prefs.getStringList(_investmentModelsKey) ?? [];
-    return investmentModelList
-        .map((json) => InvestmentModel.fromJson(jsonDecode(json)))
+    final snapshot = await FirebaseFirestore.instance
+        .collection(_investmentModelsKey)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(_investmentModelsKey)
+        .get();
+    return snapshot.docs
+        .map((doc) => InvestmentModel(
+              id: doc.id,
+              name: doc['name'],
+              unitAmount: doc['unitAmount'],
+              unitPrice: doc['unitPrice'],
+              date: doc['date'],
+              value: doc['value'],
+            ))
         .toList();
   }
 
-  Future<void> saveInvestmentModels(List<InvestmentModel> investmentModels) async {
-    final List<String> investmentModelStrings =
-        investmentModels.map((investmentModel) => jsonEncode(investmentModel.toJson())).toList();
-    await _prefs.setStringList(_investmentModelsKey, investmentModelStrings);
+  Future<DocumentReference> saveInvestmentModels(
+    InvestmentModel investmentModel) async {
+      return await FirebaseFirestore.instance
+          .collection(_investmentModelsKey)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection(_investmentModelsKey)
+          .add({
+        'name': investmentModel.name,
+        'unitAmount': investmentModel.unitAmount,
+        'unitPrice': investmentModel.unitPrice,
+        'date': investmentModel.date,
+        'value': investmentModel.value,
+      });
+  }
+
+  Future updateInvestmentModels(
+    String index,
+    InvestmentModel investmentModel) async {
+      return await FirebaseFirestore.instance
+          .collection(_investmentModelsKey)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection(_investmentModelsKey)
+          .doc(index)
+          .update({
+        'name': investmentModel.name,
+        'unitAmount': investmentModel.unitAmount,
+        'unitPrice': investmentModel.unitPrice,
+        'date': investmentModel.date,
+        'value': investmentModel.value,
+      });
+  }
+
+  Future<void> deleteInvestmentModel(String id) async {
+    await FirebaseFirestore.instance
+        .collection(_investmentModelsKey)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(_investmentModelsKey)
+        .doc(id)
+        .delete();
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
 import 'package:savetify/src/features/investment/model/InvestmentRepository.dart';
 
-class InvestmentViewModel extends ChangeNotifier {
+class InvestmentViewModel {
   final InvestmentModelRepository _repository;
   List<InvestmentModel> investmentModels = [];
   bool obscureTotalValue = false;
@@ -11,25 +11,19 @@ class InvestmentViewModel extends ChangeNotifier {
 
   Future<void> loadInvestmentModels() async {
     investmentModels = await _repository.getInvestmentModels();
-    notifyListeners();
   }
 
   Future<void> addInvestmentModel(InvestmentModel investmentModel) async {
-    investmentModels.add(investmentModel);
-    await _repository.saveInvestmentModels(investmentModels);
-    notifyListeners();
+    var snapshot = await _repository.saveInvestmentModels(investmentModel);
+    investmentModel.id = snapshot.id;
   }
 
-  Future<void> updateInvestmentModel(int index, InvestmentModel investmentModel) async {
-    investmentModels[index] = investmentModel;
-    await _repository.saveInvestmentModels(investmentModels);
-    notifyListeners();
+  Future<void> updateInvestmentModel(String index, InvestmentModel investmentModel) async {
+    await _repository.updateInvestmentModels(index, investmentModel);
   }
 
   Future<void> deleteInvestmentModel(int index) async {
-    investmentModels.removeAt(index);
-    await _repository.saveInvestmentModels(investmentModels);
-    notifyListeners();
+    await _repository.deleteInvestmentModel(investmentModels[index].id!);
   }
 
   double getTotalInvestmentModelsValue() {
@@ -42,6 +36,5 @@ class InvestmentViewModel extends ChangeNotifier {
 
   void toggleTotalValueVisibility() {
     obscureTotalValue = !obscureTotalValue;
-    notifyListeners();
   }
 }
