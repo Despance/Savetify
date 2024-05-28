@@ -24,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
   UserModel? userModel;
   late IncomeViewModel incomeViewModel;
   ExpenseRepository? expenseRepository;
+  late String result;
   initPage() async {
     incomeViewModel = IncomeViewModel();
     userModel = await const ProfileView().getUser();
@@ -31,6 +32,8 @@ class _MainScreenState extends State<MainScreen> {
     await expenseRepository!.getExpensesFromFirebase();
     await incomeViewModel.getIncomesFromFirebase();
     incomeViewModel.getIncomes();
+    result =
+        "₺ ${(incomeViewModel.getTotalIncome() - calculateTotalExpense()).toStringAsFixed(2)}";
   }
 
   double calculateTotalExpense() {
@@ -153,12 +156,14 @@ class _MainScreenState extends State<MainScreen> {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.white)),
                               const SizedBox(height: 12),
-                              Text(
-                                  "₺ ${incomeViewModel.getTotalIncome() - calculateTotalExpense()}",
-                                  style: const TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white)),
+                              Text(result,
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.w700,
+                                    color: result.contains('-')
+                                        ? const Color.fromARGB(255, 157, 15, 5)
+                                        : const Color.fromARGB(255, 6, 127, 10),
+                                  )),
                               const SizedBox(height: 12),
                               Padding(
                                 padding: const EdgeInsets.symmetric(

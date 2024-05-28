@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var widgetList = [MainScreen(), const StatScreen(), const IncomePage()];
+  var widgetList = [MainScreen(), const IncomePage()];
   int index = 0;
   late Color selectedColor;
   Color unselectedColor = Colors.grey;
@@ -50,10 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: index == 0 ? selectedColor : unselectedColor,
                   ),
                   label: 'Home'),
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.bitcoin_circle,
-                      color: index == 1 ? selectedColor : unselectedColor),
-                  label: 'Investments'),
               BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.increase_indent,
                       color: index == 2 ? selectedColor : unselectedColor),
@@ -95,7 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
         body: switch (index) {
           0 => widgetList[0],
           1 => widgetList[1],
-          2 => widgetList[2],
           // TODO: Handle this case.
           int() => throw UnimplementedError(),
         });

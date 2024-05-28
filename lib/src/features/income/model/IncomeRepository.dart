@@ -47,4 +47,18 @@ class IncomeRepository {
       print(e);
     }
   }
+
+  deleteIncome(IncomeModel incomeModel) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('incomes')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('user_incomes')
+          .doc(incomeModel.id)
+          .delete();
+      incomes.remove(incomeModel);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
