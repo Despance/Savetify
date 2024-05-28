@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
 import 'package:savetify/src/features/auth/view/add_details_view.dart';
+import 'package:savetify/app_view.dart';
 import 'package:savetify/src/features/auth/view/auth_view.dart';
 import 'package:savetify/src/features/profile/view/profile_view.dart';
 import 'package:savetify/src/theme/theme.dart';
 import 'src/core/firebase_options.dart';
 import 'src/features/auth/view/sign_in_view.dart';
 import 'src/features/auth/view/sign_up_view.dart';
-
-// ...
 
 void main() {
   runApp(const MyApp());
@@ -56,10 +55,26 @@ class MyApp extends StatelessWidget {
               '/add_details': (context) => const AddDetailsView(),
               '/profile': (context) => const ProfileView(),
               '/auth': (context) => const AuthView(),
+              '/app': (context) => const MyAppView(),
             },
-            title: 'Savetify',
-            theme: SavetifyTheme.lightTheme,
-            home: const AuthView(),
+            theme: ThemeData.light(),
+            builder: (context, child) {
+              final Brightness systemBrightness =
+                  MediaQuery.of(context).platformBrightness;
+
+              final ThemeMode themeMode = systemBrightness == Brightness.dark
+                  ? ThemeMode.dark
+                  : ThemeMode.light;
+
+              return MaterialApp(
+                title: 'Flutter Demo',
+                theme: SavetifyTheme.lightTheme,
+                darkTheme: SavetifyTheme.darkTheme,
+                themeMode: themeMode,
+                home: const AuthView(),
+                debugShowCheckedModeBanner: false,
+              );
+            },
           );
         });
   }
