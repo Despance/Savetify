@@ -199,10 +199,16 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                               setState(() {
                                 _isLoading = true;
                               });
-                              await addUserToFirestore(_user!, formData);
-
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, '/profile', (route) => false);
+                              await addUserToFirestore(_user!, formData)
+                                  .then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Details saved successfully! Redirecting to profile page.'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              });
                             }
                           } else {
                             {
