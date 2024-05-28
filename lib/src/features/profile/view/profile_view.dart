@@ -31,7 +31,7 @@ class ProfileView extends StatelessWidget {
     }
   }
 
-  Future<UserModel> _getUser() async {
+  Future<UserModel> getUser() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     DocumentSnapshot doc = await FirebaseFirestore.instance
@@ -98,7 +98,7 @@ class ProfileView extends StatelessWidget {
               ),
             );
           },
-          future: _getUser(),
+          future: getUser(),
         ),
       ),
     );

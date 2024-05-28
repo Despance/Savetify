@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,10 +10,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
+import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
+import 'package:savetify/src/features/expense/view_model/ExpenseViewModel.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class AddExpense extends StatefulWidget {
-  const AddExpense({Key? key}) : super(key: key);
+  AddExpense({Key? key}) : super(key: key);
+
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
@@ -22,6 +29,8 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  ExpenseViewModel expenseViewModel = ExpenseViewModel(ExpenseRepository());
+
   DateTime selectedDate = DateTime.now();
   List<String> myCategoryIcons = [
     'entertainment',
@@ -31,19 +40,6 @@ class _AddExpenseState extends State<AddExpense> {
     'home',
     'travel',
   ];
-
-  sendToFirebase(amount, category, date, description) {
-    FirebaseFirestore.instance
-        .collection('expenses')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('user_expenses')
-        .add({
-      'amount': amount,
-      'category': category,
-      'date': date,
-      'description': description,
-    });
-  }
 
   @override
   void initState() {
@@ -241,11 +237,13 @@ class _AddExpenseState extends State<AddExpense> {
                   height: kToolbarHeight,
                   child: TextButton(
                     onPressed: () {
-                      sendToFirebase(
-                        expenseController.text,
-                        categoryController.text,
-                        dateController.text,
-                        descriptionController.text,
+                      ExpenseRepository().sendToFirebase(
+                        ExpenseModel(
+                          description: descriptionController.text,
+                          amount: double.parse(expenseController.text),
+                          date: selectedDate,
+                          category: categoryController.text,
+                        ),
                       );
                       Navigator.pop(context);
                     },
