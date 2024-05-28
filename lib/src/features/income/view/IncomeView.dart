@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:savetify/src/features/income/model/IncomeModel.dart';
 import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';
 
@@ -33,16 +34,27 @@ class _IncomePageState extends State<IncomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: _initData(),
-          builder: (context, snapshot) {
-            return snapshot.connectionState == ConnectionState.waiting
-                ? const CircularProgressIndicator()
-                : Center(
-                    child: ListView(scrollDirection: Axis.vertical, children: [
+        future: _initData(),
+        builder: (context, snapshot) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? const CircularProgressIndicator()
+              : Center(
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text("Incomes",
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  color: Theme.of(context).primaryColor),
+                              textAlign: TextAlign.center)),
                       ...getIncomes(),
-                    ]),
-                  );
-          }),
+                    ],
+                  ),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addIncome(),
         heroTag: 'addIncome',
@@ -73,57 +85,69 @@ class _IncomePageState extends State<IncomePage> {
             elevation: 4,
             child: ListTile(
               title: Text(investment.description),
-              subtitle: Text(investment.amount.toString()),
-              trailing: Text(investment.date.toString()),
+              subtitle: Text('₺${investment.amount}'),
+              trailing: Text(_formatDate(investment.date)),
             ),
           ),
       ];
     }
   }
 
+  _formatDate(DateTime date) {
+    return "${date.day}/${date.month}/${date.year}";
+  }
+
   Widget addIncomeScreen() {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Report'),
-      ),
-      body: Column(
-        children: [
-          TextField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(
-              hintText: 'Enter description',
-            ),
-          ),
-          TextFormField(
-            controller: _amountController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(
-                  r'[0-9,.]')), // Sadece rakam, virgül ve nokta girilmesine izin verir
-            ],
-            decoration: const InputDecoration(
-              hintText: 'Enter amount',
-            ),
-          ),
-          TextButton(
-            onPressed: () async => _selectedStartingDate = await _selectDate(),
-            child: const Text("Select Start Date"),
-          ),
-          TextButton(
-            onPressed: () => {
-              //TODO: Add the income to the database
-              incomeViewModel.setIncomesFromFirebase(
-                IncomeModel(
-                    description: _descriptionController.text,
-                    amount: double.parse(_amountController.text),
-                    date: _selectedStartingDate),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 32.0, left: 16, right: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                hintText: 'Enter description',
               ),
-              Navigator.pop(context),
-              setState(() => incomeViewModel.getIncomes()), // refresh the view
-            },
-            child: const Text("Save"),
-          ),
-        ],
+            ),
+            TextFormField(
+              controller: _amountController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(
+                    r'[0-9,.]')), // Sadece rakam, virgül ve nokta girilmesine izin verir
+              ],
+              decoration: const InputDecoration(
+                hintText: 'Enter amount',
+              ),
+            ),
+            TextButton(
+              onPressed: () async =>
+                  _selectedStartingDate = await _selectDate(),
+              child: const Text("Select Start Date"),
+            ),
+            TextButton(
+              onPressed: () => {
+                //TODO: Add the income to the database
+                if (_descriptionController.text.isNotEmpty &&
+                    _amountController.text.isNotEmpty)
+                  {
+                    incomeViewModel.setIncomesFromFirebase(
+                      IncomeModel(
+                          description: _descriptionController.text,
+                          amount: double.parse(_amountController.text),
+                          date: _selectedStartingDate),
+                    ),
+                  },
+                Navigator.pop(context),
+                setState(
+                    () => incomeViewModel.getIncomes()), // refresh the view
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,47 +165,6 @@ class _IncomePageState extends State<IncomePage> {
     await incomeViewModel.getIncomesFromFirebase();
     incomeViewModel.getIncomes();
   }
-
-/*
-const SizedBox(height: 16),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: TextFormField(
-                    controller: expenseController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(
-                          r'[0-9,.]')), // Sadece rakam, virgül ve nokta girilmesine izin verir
-                    ],
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: "Amount",
-                      prefixIcon: Icon(
-                        CupertinoIcons.money_dollar,
-                        color: Colors.grey[600],
-                      ),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: "Enter the amount",
-                    ),
-                    onChanged: (value) {
-                      if (value.contains(',')) {
-                        value = value.replaceAll(',', '.');
-                        expenseController.value = TextEditingValue(
-                          text: value,
-                          selection:
-                              TextSelection.collapsed(offset: value.length),
-                        );
-                      }
-                    },
-                  ),
-                ),
-
- */
 
   /*
   const SizedBox(height: 16),

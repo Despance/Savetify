@@ -14,6 +14,13 @@ class IncomeViewModel{
     await _incomeRepository.addToFireBase( incomeModel);
   }
 
+  double getTotalIncome() {
+    double totalIncome = 0;
+    _incomeRepository.getIncomes().forEach((element) {
+      totalIncome += element.amount;
+    });
+    return totalIncome;
+  }
 
   getIncomes() {
     return _incomeRepository.getIncomes();
