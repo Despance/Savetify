@@ -8,6 +8,7 @@ import 'package:savetify/src/features/data/data.dart';
 import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/account_cards.dart';
+import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';
 import 'package:savetify/src/features/profile/model/user.dart';
 import 'package:savetify/src/features/profile/view/profile_view.dart';
 import 'package:savetify/src/theme/theme.dart';
@@ -21,12 +22,15 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   UserModel? userModel;
-
+  late IncomeViewModel incomeViewModel;
   ExpenseRepository? expenseRepository;
   initPage() async {
+    incomeViewModel = IncomeViewModel();
     userModel = await const ProfileView().getUser();
     expenseRepository = ExpenseRepository();
     await expenseRepository!.getExpensesFromFirebase();
+    await incomeViewModel.getIncomesFromFirebase();
+    incomeViewModel.getIncomes();
   }
 
   double calculateTotalExpense() {
@@ -149,7 +153,8 @@ class _MainScreenState extends State<MainScreen> {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.white)),
                               const SizedBox(height: 12),
-                              Text("₺ ${-calculateTotalExpense()}",
+                              Text(
+                                  "₺ ${incomeViewModel.getTotalIncome() - calculateTotalExpense()}",
                                   style: const TextStyle(
                                       fontSize: 40,
                                       fontWeight: FontWeight.w700,
@@ -179,17 +184,18 @@ class _MainScreenState extends State<MainScreen> {
                                           ),
                                         ),
                                         const SizedBox(width: 8),
-                                        const Column(
+                                        Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Income",
+                                            const Text("Income",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w400,
                                                     color: Colors.white)),
-                                            Text("₺ 2500.00",
-                                                style: TextStyle(
+                                            Text(
+                                                "₺ ${incomeViewModel.getTotalIncome()}",
+                                                style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.white)),

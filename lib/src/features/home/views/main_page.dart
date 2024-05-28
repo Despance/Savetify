@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:savetify/src/features/home/views/main_screen.dart';
 import 'package:savetify/src/features/investment/view/investment.dart';
 import 'package:savetify/src/features/expense/view/expense.dart';
-import 'package:savetify/src/features/income/view/income.dart';
+import 'package:savetify/src/features/income/view/IncomeView.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
