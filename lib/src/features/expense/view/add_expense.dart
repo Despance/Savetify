@@ -16,9 +16,10 @@ import 'package:savetify/src/features/expense/view_model/ExpenseViewModel.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class AddExpense extends StatefulWidget {
-  AddExpense({Key? key}) : super(key: key);
-
   String userId = FirebaseAuth.instance.currentUser!.uid;
+  ExpenseModel? expenseModel;
+
+  AddExpense({super.key, this.expenseModel});
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
@@ -30,7 +31,6 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController dateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   ExpenseViewModel expenseViewModel = ExpenseViewModel(ExpenseRepository());
-
   DateTime selectedDate = DateTime.now();
   List<String> myCategoryIcons = [
     'entertainment',
@@ -43,9 +43,16 @@ class _AddExpenseState extends State<AddExpense> {
 
   @override
   void initState() {
+    super.initState();
     dateController.text =
         DateFormat("dd/MM/yyyy").format(DateTime.now()).toString();
-    super.initState();
+    if (widget.expenseModel != null) {
+      expenseController.text = widget.expenseModel!.amount.toString();
+      categoryController.text = widget.expenseModel!.category;
+      dateController.text =
+          DateFormat("dd/MM/yyyy").format(widget.expenseModel!.date).toString();
+      descriptionController.text = widget.expenseModel!.description;
+    }
   }
 
   @override
@@ -237,14 +244,24 @@ class _AddExpenseState extends State<AddExpense> {
                   height: kToolbarHeight,
                   child: TextButton(
                     onPressed: () {
-                      ExpenseRepository().sendToFirebase(
-                        ExpenseModel(
-                          description: descriptionController.text,
-                          amount: double.parse(expenseController.text),
-                          date: selectedDate,
-                          category: categoryController.text,
-                        ),
-                      );
+                      widget.expenseModel != null
+                          ? expenseViewModel.updateExpense(
+                              ExpenseModel(
+                                id: widget.expenseModel!.id,
+                                description: descriptionController.text,
+                                amount: double.parse(expenseController.text),
+                                date: selectedDate,
+                                category: categoryController.text,
+                              ),
+                            )
+                          : ExpenseRepository().sendToFirebase(
+                              ExpenseModel(
+                                description: descriptionController.text,
+                                amount: double.parse(expenseController.text),
+                                date: selectedDate,
+                                category: categoryController.text,
+                              ),
+                            );
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(

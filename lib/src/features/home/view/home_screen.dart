@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/report/view_model/stats.dart';
@@ -55,20 +56,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(CupertinoIcons.bitcoin_circle,
                     color: index == 1 ? selectedColor : unselectedColor),
                 label: 'Investments'),
-            /*     BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.graph_circle), label: 'Stats'),
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.person_crop_circle),
-                  label: 'Profile')*/
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return AddExpense();
-          }));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return AddExpense();
+              },
+            ),
+          );
         },
         shape: const CircleBorder(),
         child: Container(

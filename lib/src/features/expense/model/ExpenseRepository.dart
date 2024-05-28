@@ -29,7 +29,7 @@ class ExpenseRepository {
   }
 
   List<ExpenseModel> getExpenses() {
-    return _expenses;
+    return _expenses.reversed.toList();
   }
 
   void addExpense(ExpenseModel expense) {
@@ -49,6 +49,20 @@ class ExpenseRepository {
     });
     expenseModel.id = snapshot.id;
     _expenses.add(expenseModel);
+  }
+
+  sendToFirebaseUpdate(ExpenseModel expenseModel) async {
+    await FirebaseFirestore.instance
+        .collection('expenses')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('user_expenses')
+        .doc(expenseModel.id)
+        .update({
+      'amount': expenseModel.amount,
+      'category': expenseModel.category,
+      'date': expenseModel.date,
+      'description': expenseModel.description,
+    });
   }
 
   void deleteExpense(String id) {
