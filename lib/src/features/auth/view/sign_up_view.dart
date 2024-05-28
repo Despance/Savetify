@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+  const SignupPage({super.key});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -34,73 +34,79 @@ class _SignupPageState extends State<SignupPage> {
       home: Scaffold(
         body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                    key: _formKey,
-                    child: (constraints.maxWidth >= 1200)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Lottie.asset(
-                                        'lib/src/anim/boarding_anim.json',
-                                        width: 400,
-                                        height: 400,
-                                        fit: BoxFit.fill),
-                                    const Text(
-                                      'Track your expenses with ease!',
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+            return Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                        key: _formKey,
+                        child: (constraints.maxWidth >= 1200)
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                            'lib/src/anim/boarding_anim.json',
+                                            width: 400,
+                                            height: 400,
+                                            fit: BoxFit.fill),
+                                        const Text(
+                                          'Track your expenses with ease!',
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Managing your invesments better.',
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.blueGrey,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const Text(
-                                      'Managing your invesments better.',
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        color: Colors.blueGrey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              buildSignUpField(context, constraints),
-                            ],
-                          )
-                        : buildSignUpField(context, constraints)));
+                                  ),
+                                  Expanded(
+                                      child: buildSignUpField(
+                                          context, constraints)),
+                                ],
+                              )
+                            : buildSignUpField(context, constraints))),
+              ),
+            );
           },
         ),
       ),
     );
   }
 
-  Expanded buildSignUpField(context, constraints) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SignUpBoarding(),
-          allTextFields(),
-          const SizedBox(height: 40),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 35),
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-              textStyle: const TextStyle(fontSize: 16),
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _signUpWithEmailAndPassword();
-              }
-            },
-            child: const Text('Sign Up'),
+  Widget buildSignUpField(context, constraints) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SignUpBoarding(),
+        allTextFields(),
+        const SizedBox(height: 40),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 35),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+            textStyle: const TextStyle(fontSize: 16),
           ),
-        ],
-      ),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              _signUpWithEmailAndPassword();
+            }
+          },
+          child: const Text('Sign Up'),
+        ),
+      ],
     );
   }
 
@@ -157,7 +163,7 @@ class _SignupPageState extends State<SignupPage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
-            controller: _passwordController,
+            controller: _confirmPasswordController,
             decoration: InputDecoration(
                 labelText: 'Confirm Password',
                 hintText: 'Enter your password again',
@@ -189,14 +195,23 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _signUpWithEmailAndPassword() async {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    if (userCredential.user != null) {
-      Navigator.of(context).pop();
+      if (userCredential.user != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/add_details', (route) => false);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
     }
   }
 }

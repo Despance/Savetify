@@ -37,106 +37,111 @@ class _LoginPageState extends State<LoginPage> {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-                key: _formKey,
-                child: (constraints.maxWidth >= 1200)
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Lottie.asset('lib/src/anim/boarding_anim.json',
-                                    width: 400, height: 400, fit: BoxFit.fill),
-                                const Text(
-                                  'Track your expenses with ease!',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+          body: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                    key: _formKey,
+                    child: (constraints.maxWidth >= 1200)
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                        'lib/src/anim/boarding_anim.json',
+                                        width: 400,
+                                        height: 400,
+                                        fit: BoxFit.fill),
+                                    const Text(
+                                      'Track your expenses with ease!',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const Text(
+                                      'Managing your invesments better.',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const Text(
-                                  'Managing your invesments better.',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    color: Colors.blueGrey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          buildSignInColumn(context, constraints),
-                        ],
-                      )
-                    : buildSignInColumn(context, constraints)),
+                              ),
+                              Expanded(
+                                  child:
+                                      buildSignInColumn(context, constraints)),
+                            ],
+                          )
+                        : buildSignInColumn(context, constraints)),
+              ),
+            ),
           ),
         );
       },
     );
   }
 
-  Expanded buildSignInColumn(BuildContext context, BoxConstraints constraints) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          (constraints.maxWidth < 1200)
-              ? Lottie.asset('lib/src/anim/boarding_anim.json',
-                  width: 400, height: 400, fit: BoxFit.fill)
-              : const SizedBox(
-                  height: 10,
-                ),
-          const WelcomeScreen(),
-          allTextFields(),
-
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            TextButton(
-              onPressed: () {/* Handle 'Forgot Password' action */},
-              child: const Text('Forgot Password?'),
-            ),
-          ]),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
-              textStyle: const TextStyle(fontSize: 16),
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _signInWithEmailAndPassword();
-              }
-            },
-            child: const Text('Sign In'),
-          ),
-
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 32.0),
-            child: DividerWithText(text: 'or'),
-          ),
-          SignInButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            Buttons.google,
-            onPressed: _signInWithGoogle,
-          ),
-          const SizedBox(height: 20), // Add spacing
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Don't have an account?"),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/signup');
-                },
-                child: const Text('Sign Up'),
+  Widget buildSignInColumn(BuildContext context, BoxConstraints constraints) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        (constraints.maxWidth < 1200)
+            ? Lottie.asset('lib/src/anim/boarding_anim.json',
+                width: 400, height: 400, fit: BoxFit.fill)
+            : const SizedBox(
+                height: 10,
               ),
-            ],
+        const WelcomeScreen(),
+        allTextFields(),
+
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          TextButton(
+            onPressed: () {/* Handle 'Forgot Password' action */},
+            child: const Text('Forgot Password?'),
           ),
-        ],
-      ),
+        ]),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
+            textStyle: const TextStyle(fontSize: 16),
+          ),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              _signInWithEmailAndPassword();
+            }
+          },
+          child: const Text('Sign In'),
+        ),
+
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 32.0),
+          child: DividerWithText(text: 'or'),
+        ),
+        SignInButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          Buttons.google,
+          onPressed: _signInWithGoogle,
+        ),
+        const SizedBox(height: 20), // Add spacing
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Don't have an account?"),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/signup');
+              },
+              child: const Text('Sign Up'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -209,7 +214,11 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       SnackBar(content: Text('Error signing in with Google: $e'));
     }
-
+    if (userCredenitals != null) {
+      if (userCredenitals.additionalUserInfo!.isNewUser) {
+        Navigator.pushNamed(context, '/add_details');
+      }
+    }
     return userCredenitals;
   }
 
@@ -224,12 +233,17 @@ class _LoginPageState extends State<LoginPage> {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<UserCredential> _signInWithEmailAndPassword() async {
-    var userCredenitals = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
-
-    return userCredenitals;
+  Future _signInWithEmailAndPassword() async {
+    try {
+      var userCredenitals = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim());
+      return userCredenitals;
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 }
 
