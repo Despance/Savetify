@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
               '/add_details': (context) => const AddDetailsView(),
               '/profile': (context) => const ProfileView(),
               '/auth': (context) => const AuthView(),
+              '/app': (context) => const MyAppView(),
             },
             theme: ThemeData.light(),
             builder: (context, child) {
@@ -70,7 +71,7 @@ class MyApp extends StatelessWidget {
                 theme: SavetifyTheme.lightTheme,
                 darkTheme: SavetifyTheme.darkTheme,
                 themeMode: themeMode,
-                home: const MyAppView(),
+                home: const AuthView(),
                 debugShowCheckedModeBanner: false,
               );
             },
