@@ -41,14 +41,12 @@ class IncomeRepository {
         'date': incomeModel.date,
         'description': incomeModel.description,
       });
-      incomeModel.id = snapshot.id;
-      incomes.add(incomeModel);
     } catch (e) {
       print(e);
     }
   }
 
-  deleteIncome(IncomeModel incomeModel) async {
+  deleteIncomeFromFirebase(IncomeModel incomeModel) async {
     try {
       await FirebaseFirestore.instance
           .collection('incomes')
