@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:savetify/src/features/auth/view/add_details_view.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class SignupPage extends StatefulWidget {
@@ -203,8 +204,10 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if (userCredential.user != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/add_details', (route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (builder) => const AddDetailsView()),
+            (route) => false);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
