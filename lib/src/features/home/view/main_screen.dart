@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:savetify/src/features/data/data.dart';
 import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
@@ -34,6 +35,10 @@ class _MainScreenState extends State<MainScreen> {
       total += expenseRepository!.getExpenses()[i].amount;
     }
     return total;
+  }
+
+  void Update() {
+    setState(() {});
   }
 
   @override
@@ -290,74 +295,125 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget ExpenseCard(int i) {
-    return GestureDetector(
-      onTap: () {},
-      child: Card(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+    return Dismissible(
+      key: Key(expenseRepository!.getExpenses()[i].id!),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        final deletedExpense = expenseRepository!.getExpenses()[i];
+        expenseRepository!.deleteExpenseFromFirebase(deletedExpense.id!);
+        setState(() {
+          expenseRepository!.getExpenses().removeAt(i);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Expense "${deletedExpense.description}" deleted'),
+            backgroundColor: const Color.fromARGB(255, 118, 9, 1),
+            action: SnackBarAction(
+              label: 'Undo',
+              textColor: Colors.white,
+              onPressed: () {
+                setState(() {
+                  expenseRepository!.getExpenses().insert(i, deletedExpense);
+                  expenseRepository!.sendToFirebase(deletedExpense);
+                });
+              },
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromARGB(77, 255, 255, 255),
-                          ),
-                        ),
-                        Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  'lib/src/assets/${expenseRepository!.getExpenses()[i].category}.png'),
+        );
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        color: const Color.fromARGB(255, 177, 20, 9).withOpacity(0.5),
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return AddExpense(
+                  expenseModel: expenseRepository!.getExpenses()[i],
+                );
+              },
+            ),
+          );
+        },
+        child: Card(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromARGB(77, 255, 255, 255),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      expenseRepository!.getExpenses()[i].category,
-                      style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 0, 0, 0)),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      expenseRepository!.getExpenses()[i].amount.toString(),
-                      style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 0, 0, 0)),
-                    ),
-                    Text(
-                      expenseRepository!.getExpenses()[i].date.toString(),
-                      style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w300,
-                          color: Color.fromARGB(255, 0, 0, 0)),
-                    ),
-                  ],
-                )
-              ],
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'lib/src/assets/${expenseRepository!.getExpenses()[i].category}.png'),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        expenseRepository!.getExpenses()[i].category,
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        expenseRepository!.getExpenses()[i].amount.toString(),
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                      Text(
+                        DateFormat("dd/MM/yyyy")
+                            .format(expenseRepository!.getExpenses()[i].date)
+                            .toString(),
+                        //DatexpenseRepository!.getExpenses()[i].date.toString(),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

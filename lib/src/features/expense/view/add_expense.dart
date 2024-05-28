@@ -245,7 +245,7 @@ class _AddExpenseState extends State<AddExpense> {
                   child: TextButton(
                     onPressed: () {
                       widget.expenseModel != null
-                          ? expenseViewModel.updateExpense(
+                          ? ExpenseRepository().sendToFirebaseUpdate(
                               ExpenseModel(
                                 id: widget.expenseModel!.id,
                                 description: descriptionController.text,

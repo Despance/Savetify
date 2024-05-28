@@ -65,8 +65,18 @@ class ExpenseRepository {
     });
   }
 
+  Future<void> deleteExpenseFromFirebase(String id) async {
+    await FirebaseFirestore.instance
+        .collection('expenses')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('user_expenses')
+        .doc(id)
+        .delete();
+  }
+
   void deleteExpense(String id) {
     _expenses.removeWhere((expense) => expense.id == id);
+    deleteExpenseFromFirebase(id); // Firebase'den de sil
   }
 
   void updateExpense(ExpenseModel expense) {
