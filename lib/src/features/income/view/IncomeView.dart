@@ -80,13 +80,21 @@ class _IncomePageState extends State<IncomePage> {
       ];
     } else {
       return [
-        for (var investment in incomeViewModel.getIncomes())
-          Card(
-            elevation: 4,
-            child: ListTile(
-              title: Text(investment.description),
-              subtitle: Text('₺${investment.amount}'),
-              trailing: Text(_formatDate(investment.date)),
+        for (var income in incomeViewModel.getIncomes())
+          Dismissible(
+            key: Key(income.id!),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) {
+              incomeViewModel.deleteIncome(income);
+              setState(() {});
+            },
+            child: Card(
+              elevation: 4,
+              child: ListTile(
+                title: Text(income.description),
+                subtitle: Text('₺${income.amount}'),
+                trailing: Text(_formatDate(income.date)),
+              ),
             ),
           ),
       ];
@@ -141,8 +149,7 @@ class _IncomePageState extends State<IncomePage> {
                     ),
                   },
                 Navigator.pop(context),
-                setState(
-                    () => incomeViewModel.getIncomes()), // refresh the view
+                setState(() => {}), // refresh the view
               },
               child: const Text("Save"),
             ),
@@ -165,41 +172,4 @@ class _IncomePageState extends State<IncomePage> {
     await incomeViewModel.getIncomesFromFirebase();
     incomeViewModel.getIncomes();
   }
-
-  /*
-  const SizedBox(height: 16),
-                TextFormField(
-                  controller: dateController,
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? newDate = await showDatePicker(
-                      context: context,
-                      initialDate: selectedDate,
-                      firstDate:
-                          DateTime.now().subtract(const Duration(days: 365)),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (newDate != null) {
-                      dateController.text =
-                          DateFormat("dd/MM/yyyy").format(newDate).toString();
-                      selectedDate = newDate;
-                    }
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: "Date",
-                    prefixIcon: Icon(
-                      CupertinoIcons.calendar_today,
-                      color: Colors.grey[600],
-                    ),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintText: "Enter the date",
-                  ),
-                ),
-  
-  */
 }
