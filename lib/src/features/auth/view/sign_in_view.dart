@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
+import 'package:savetify/src/features/auth/view/add_details_view.dart';
+import 'package:savetify/src/features/auth/view/forgot_password.dart';
+import 'package:savetify/src/features/auth/view/sign_up_view.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -101,7 +104,11 @@ class _LoginPageState extends State<LoginPage> {
 
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           TextButton(
-            onPressed: () {/* Handle 'Forgot Password' action */},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ForgotPasswordPage();
+              }));
+            },
             child: const Text('Forgot Password?'),
           ),
         ]),
@@ -135,7 +142,9 @@ class _LoginPageState extends State<LoginPage> {
             const Text("Don't have an account?"),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/signup');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const SignupPage();
+                }));
               },
               child: const Text('Sign Up'),
             ),
@@ -216,7 +225,10 @@ class _LoginPageState extends State<LoginPage> {
     }
     if (userCredenitals != null) {
       if (userCredenitals.additionalUserInfo!.isNewUser) {
-        Navigator.pushNamed(context, '/add_details');
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (builder) => const AddDetailsView()),
+            (route) => false);
       }
     }
     return userCredenitals;

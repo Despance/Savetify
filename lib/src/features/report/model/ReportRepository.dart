@@ -57,32 +57,6 @@ class ReportRepository {
     ];
   }
 
-  List<ExpenseModel> getExpenses() {
-    return [
-      ExpenseModel(
-          name: 'Expense 1',
-          description: '',
-          id: '1',
-          amount: 100,
-          date: DateTime(2020, 1, 2),
-          category: 'Category 1'),
-      ExpenseModel(
-          name: 'Expense 2',
-          description: '',
-          id: '1',
-          amount: 200,
-          date: DateTime(2020, 5, 2),
-          category: 'Category 2'),
-      ExpenseModel(
-          name: 'Expense 3',
-          description: '',
-          id: '1',
-          amount: 300,
-          date: DateTime(2021, 1, 2),
-          category: 'Category 3'),
-    ];
-  }
-
   retrieveDataFromFirebase(String userId) {
     try {
       FirebaseFirestore.instance
