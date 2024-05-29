@@ -14,13 +14,13 @@ import 'package:savetify/src/features/profile/view/profile_view.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({super.key});
+  MainScreen({Key? key}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreen> createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   UserModel? userModel;
   late IncomeViewModel incomeViewModel;
   ExpenseRepository? expenseRepository;
@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
           future: initPage(),
           builder: (context, snapshot) {
             return snapshot.connectionState == ConnectionState.waiting
-                ? const CircularProgressIndicator()
+                ? const Center(child: CircularProgressIndicator())
                 : Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25, vertical: 10),
@@ -358,8 +358,8 @@ class _MainScreenState extends State<MainScreen> {
         child: Card(
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
+                borderRadius: BorderRadius.circular(20),
+                color: const Color.fromRGBO(207, 252, 226, 1)),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -392,12 +392,25 @@ class _MainScreenState extends State<MainScreen> {
                         ],
                       ),
                       const SizedBox(width: 10),
-                      Text(
-                        expenseRepository!.getExpenses()[i].category,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromARGB(255, 0, 0, 0)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            expenseRepository!.getExpenses()[i].description,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Color.fromARGB(255, 0, 0, 0)),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            expenseRepository!.getExpenses()[i].category,
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromARGB(255, 0, 0, 0)),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -415,7 +428,6 @@ class _MainScreenState extends State<MainScreen> {
                         DateFormat("dd/MM/yyyy")
                             .format(expenseRepository!.getExpenses()[i].date)
                             .toString(),
-                        //DatexpenseRepository!.getExpenses()[i].date.toString(),
                         style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w300,

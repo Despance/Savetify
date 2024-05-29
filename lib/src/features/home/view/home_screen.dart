@@ -17,15 +17,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var widgetList = [MainScreen(), const IncomePage()];
+  final GlobalKey<MainScreenState> mainScreenKey = GlobalKey<MainScreenState>();
+
+  late List<Widget> widgetList;
+
   int index = 0;
   late Color selectedColor;
   Color unselectedColor = Colors.grey;
 
   @override
   void initState() {
-    selectedColor = SavetifyTheme.lightTheme.primaryColor;
     super.initState();
+    widgetList = [MainScreen(key: mainScreenKey), const IncomePage()];
+    selectedColor = SavetifyTheme.lightTheme.primaryColor;
   }
 
   @override
@@ -67,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return AddExpense();
                 },
               ),
-            );
+            ).then((value) => mainScreenKey.currentState!.setState(() {}));
           },
           shape: const CircleBorder(),
           child: Container(
