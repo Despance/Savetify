@@ -1,27 +1,32 @@
-import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
+// import 'package:flutter/material.dart';
+// import 'package:savetify/src/features/investment/view_model/InvestmentViewModel.dart';
 
-class PortfolioModel {
-  String _userId = '';
-  String _portfolioName = '';
-  String _portfolioId = '';
-  List<InvestmentModel> _investments = [];
+// class InvestmentPortfolio extends StatelessWidget {
 
-  PortfolioModel.create(String userId, String portfolioName, String portfolioId,
-      List<InvestmentModel> investments) {
-    _userId = userId;
-    _portfolioName = portfolioName;
-    _portfolioId = portfolioId;
-    _investments = investments;
-  }
+//   final InvestmentViewModel viewModel = InvestmentViewModel();  
 
-  void addInvestment(InvestmentModel investment) {
-    _investments.add(investment);
-  }
-
-  String get userId => _userId;
-  String get portfolioName => _portfolioName;
-  String get portfolioId => _portfolioId;
-  List<InvestmentModel> get investments => _investments;
-
-  
-}
+//   @override
+//   Widget build(BuildContext context) {
+//         return Column(
+//           children: [
+//             ListTile(
+//               title: const Text('Total Investments'),
+//               trailing: IconButton(
+//                 icon: Icon(viewModel.obscureTotalValue
+//                     ? Icons.visibility_off
+//                     : Icons.visibility),
+//                 onPressed: () {
+//                   viewModel.toggleTotalValueVisibility();
+//                 },
+//               ),
+//               subtitle: Text(
+//                 viewModel.obscureTotalValue
+//                     ? '***'
+//                     : '\$${viewModel.getTotalInvestmentModelsValue().toStringAsFixed(2)}',
+//               ),
+//             ),
+//             const Divider(),
+//           ],
+//         );
+//   }
+// }

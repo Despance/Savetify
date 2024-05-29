@@ -156,14 +156,9 @@ class ReportViewModel {
   }
 
   getExpenseForTime(DateTime startingDate, DateTime endingDate) {
-    List<ExpenseModel> expenses = _expenses
-        .where((expense) =>
-            expense.date.isAfter(startingDate) &&
-            expense.date.isBefore(endingDate))
-        .toList();
-    ;
+    // List<ExpenseModel> expenses = _reportRepository.getAllInvestmentData()
     List<ExpenseModel> newExpenses = [];
-    for (ExpenseModel expense in expenses) {
+    for (ExpenseModel expense in newExpenses) {
       if (expense.date.isAfter(startingDate) &&
           expense.date.isBefore(endingDate)) {
         newExpenses.add(expense);

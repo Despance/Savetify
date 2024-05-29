@@ -6,6 +6,7 @@ import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/income/view/IncomeView.dart';
+import 'package:savetify/src/features/investment/view/investment.dart';
 import 'package:savetify/src/features/report/view_model/stats.dart';
 import 'package:savetify/src/theme/theme.dart';
 
@@ -28,7 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    widgetList = [MainScreen(key: mainScreenKey), const IncomePage()];
+    widgetList = [
+      MainScreen(key: mainScreenKey),
+      const IncomePage(),
+      const InvestmentPage()
+    ];
     selectedColor = SavetifyTheme.lightTheme.primaryColor;
   }
 
@@ -91,77 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
               transform: GradientRotation(pi / 5),
             ),
+            child: const Icon(CupertinoIcons.add),
           ),
-          child: const Icon(CupertinoIcons.add),
         ),
-      ),
-      body: switch (index) {
-        0 => widgetList[0],
-        1 => widgetList[1],
-        // TODO: Handle this case.
-        int() => throw UnimplementedError(),
-      },
-    );
-  }
-
-  void _showMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    // Add Income
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddExpense()),
-                    ).then(
-                        (value) => mainScreenKey.currentState!.setState(() {}));
-                  },
-                  label: Text('Add Income'),
-                  heroTag: 'addIncome',
-                  icon: Icon(Icons.attach_money),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    // Add Investment
-                    // Your navigation logic here
-                  },
-                  label: Text('Add Investment'),
-                  heroTag: 'addInvestment',
-                  icon: Icon(Icons.trending_up),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    // Add Expense
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddExpense()),
-                    ).then(
-                        (value) => mainScreenKey.currentState!.setState(() {}));
-                  },
-                  label: Text('Add Expense'),
-                  heroTag: 'addExpense',
-                  icon: Icon(Icons.payment),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+        body: switch (index) {
+          0 => widgetList[0],
+          1 => widgetList[1],
+          2 => widgetList[2],
+          // TODO: Handle this case.
+          int() => throw UnimplementedError(),
+        });
   }
 }
