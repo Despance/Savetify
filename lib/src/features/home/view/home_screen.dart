@@ -6,6 +6,7 @@ import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/income/view/IncomeView.dart';
+import 'package:savetify/src/features/investment/view/investment.dart';
 import 'package:savetify/src/features/report/view_model/stats.dart';
 import 'package:savetify/src/theme/theme.dart';
 
@@ -28,7 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    widgetList = [MainScreen(key: mainScreenKey), const IncomePage()];
+    widgetList = [
+      MainScreen(key: mainScreenKey),
+      const IncomePage(),
+      const InvestmentPage()
+    ];
     selectedColor = SavetifyTheme.lightTheme.primaryColor;
   }
 
@@ -56,8 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Home'),
               BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.increase_indent,
-                      color: index == 2 ? selectedColor : unselectedColor),
+                      color: index == 1 ? selectedColor : unselectedColor),
                   label: 'Incomes'),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.money_dollar_circle,
+                      color: index == 2 ? selectedColor : unselectedColor),
+                  label: 'Invesments'),
             ],
           ),
         ),
@@ -95,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: switch (index) {
           0 => widgetList[0],
           1 => widgetList[1],
+          2 => widgetList[2],
           // TODO: Handle this case.
           int() => throw UnimplementedError(),
         });

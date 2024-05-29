@@ -50,9 +50,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
       _totalValueController.text = investment.value;
       _unitPriceController.text = investment.unitPrice;
       _date = investment.date;
-      selectedType = _unitAmountController.text.isNotEmpty
-          ? 'Unit Amount'
-          : 'Total Value';
+      selectedType =
+          _unitAmountController.text.isNotEmpty ? 'Unit Amount' : 'Total Value';
     } else {
       _nameController.clear();
       _unitAmountController.clear();
@@ -171,7 +170,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                           );
                           if (pickedDate != null) {
                             setState(() {
-                              _date = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              _date =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
                             });
                           }
                         },
@@ -211,7 +211,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         : _totalValueController.text,
                   );
                   if (investment != null && index != null) {
-                    await viewModel.updateInvestmentModel(investment.id!, newInvestment);
+                    await viewModel.updateInvestmentModel(
+                        investment.id!, newInvestment);
                   } else {
                     await viewModel.addInvestmentModel(newInvestment);
                   }
@@ -239,54 +240,62 @@ class _InvestmentPageState extends State<InvestmentPage> {
         ],
       ),
       body: FutureBuilder(
-        future: viewModel.loadInvestmentModels(),
-        builder: (context, snapshot) {
-          return snapshot.connectionState == ConnectionState.waiting ? CircularProgressIndicator() : Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: viewModel.investmentModels.length,
-                  itemBuilder: (context, index) {
-                    final investment = viewModel.investmentModels[index];
-                    return Card(
-                      margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(investment.name),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Unit Amount: ${investment.unitAmount}'),
-                            Text('Unit Price: \$${investment.unitPrice}'),
-                            Text('Total Value: \$${investment.value}'),
-                            Text('Date: ${investment.date}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => _showInvestmentForm(context,
-                                  investment: investment, index: index),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () async {
-                                await viewModel.deleteInvestmentModel(index);
-                                setState(() {}); // To update the UI after deletion
-                              },
-                            ),
-                          ],
+          future: viewModel.loadInvestmentModels(),
+          builder: (context, snapshot) {
+            return snapshot.connectionState == ConnectionState.waiting
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: viewModel.investmentModels.length,
+                          itemBuilder: (context, index) {
+                            final investment =
+                                viewModel.investmentModels[index];
+                            return Card(
+                              margin: const EdgeInsets.all(10),
+                              child: ListTile(
+                                title: Text(investment.name),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        'Unit Amount: ${investment.unitAmount}'),
+                                    Text(
+                                        'Unit Price: \$${investment.unitPrice}'),
+                                    Text('Total Value: \$${investment.value}'),
+                                    Text('Date: ${investment.date}'),
+                                  ],
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => _showInvestmentForm(
+                                          context,
+                                          investment: investment,
+                                          index: index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () async {
+                                        await viewModel
+                                            .deleteInvestmentModel(index);
+                                        setState(
+                                            () {}); // To update the UI after deletion
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        }
-      ),
+                    ],
+                  );
+          }),
     );
   }
 }
