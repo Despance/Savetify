@@ -11,10 +11,10 @@ class InvestmentPage extends StatefulWidget {
   const InvestmentPage({super.key});
 
   @override
-  _InvestmentPageState createState() => _InvestmentPageState();
+  InvestmentPageState createState() => InvestmentPageState();
 }
 
-class _InvestmentPageState extends State<InvestmentPage> {
+class InvestmentPageState extends State<InvestmentPage> {
   final _formKey = GlobalKey<FormState>();
 
   late InvestmentViewModel viewModel;
@@ -53,7 +53,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
     super.dispose();
   }
 
-  void _showInvestmentForm(BuildContext context,
+  showInvestmentForm(BuildContext context,
       {InvestmentModel? investment, int? index}) {
     if (investment != null) {
       _nameController.text = investment.name;
@@ -74,7 +74,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
       selectedType = 'Unit Amount';
     }
 
-    showDialog(
+    return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -361,6 +361,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Text(
+                                        'Unit Amount: ${investment.unitAmount}'),
                                     Text(_isInvestmentValueVisible
                                         ? 'Unit Amount: ${investment.unitAmount}'
                                         : 'Unit Amount: ****'),
@@ -376,7 +378,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                   children: [
                                     IconButton(
                                       icon: const Icon(CupertinoIcons.pencil),
-                                      onPressed: () => _showInvestmentForm(
+                                      onPressed: () => showInvestmentForm(
                                           context,
                                           investment: investment,
                                           index: index),
@@ -406,7 +408,9 @@ class _InvestmentPageState extends State<InvestmentPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showInvestmentForm(context),
+        onPressed: () {
+          showInvestmentForm(context);
+        },
         child: const Icon(CupertinoIcons.add),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),

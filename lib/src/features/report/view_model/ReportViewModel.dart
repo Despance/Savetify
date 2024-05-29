@@ -3,12 +3,11 @@ import 'package:savetify/src/features/income/model/IncomeModel.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
 import 'package:savetify/src/features/report/model/ReportRepository.dart';
 
-class ReportViewModel{
+class ReportViewModel {
   ReportRepository reportRepository = ReportRepository();
 
   Future<void> updateRepo() async {
     await reportRepository.updateRepo();
-    
   }
 
   List<InvestmentModel> getInvestments() {
@@ -37,7 +36,7 @@ class ReportViewModel{
 
   List<ExpenseModel> getExpenses() {
     return reportRepository.getExpenses();
-  } 
+  }
 
   double getTotalExpense() {
     double totalExpense = 0;
@@ -46,5 +45,4 @@ class ReportViewModel{
     });
     return totalExpense;
   }
-
 }

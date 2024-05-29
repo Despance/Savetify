@@ -11,7 +11,7 @@ import 'package:savetify/src/features/report/view/ReportView.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,6 +19,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<MainScreenState> mainScreenKey = GlobalKey<MainScreenState>();
+  final GlobalKey<IncomePageState> incomePageKey = GlobalKey<IncomePageState>();
+  final GlobalKey<InvestmentPageState> investmentPageKey =
+      GlobalKey<InvestmentPageState>();
 
   late List<Widget> widgetList;
 
@@ -75,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
