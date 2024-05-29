@@ -357,7 +357,7 @@ class InvestmentPageState extends State<InvestmentPage> {
                                   children: [
                                     IconButton(
                                       icon: const Icon(CupertinoIcons.pencil),
-                                      onPressed: () => _showInvestmentForm(
+                                      onPressed: () => showInvestmentForm(
                                           context,
                                           investment: investment,
                                           index: index),
@@ -387,7 +387,9 @@ class InvestmentPageState extends State<InvestmentPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showInvestmentForm(context),
+        onPressed: () {
+          showInvestmentForm(context);
+        },
         child: const Icon(CupertinoIcons.add),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
