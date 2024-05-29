@@ -24,35 +24,34 @@ class InvestmentModelRepository {
   }
 
   Future<DocumentReference> saveInvestmentModels(
-    InvestmentModel investmentModel) async {
-      return await FirebaseFirestore.instance
-          .collection(_investmentModelsKey)
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(_investmentModelsKey)
-          .add({
-        'name': investmentModel.name,
-        'unitAmount': investmentModel.unitAmount,
-        'unitPrice': investmentModel.unitPrice,
-        'date': investmentModel.date,
-        'value': investmentModel.value,
-      });
+      InvestmentModel investmentModel) async {
+    return await FirebaseFirestore.instance
+        .collection(_investmentModelsKey)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(_investmentModelsKey)
+        .add({
+      'name': investmentModel.name,
+      'unitAmount': investmentModel.unitAmount,
+      'unitPrice': investmentModel.unitPrice,
+      'date': investmentModel.date,
+      'value': investmentModel.value,
+    });
   }
 
   Future updateInvestmentModels(
-    String index,
-    InvestmentModel investmentModel) async {
-      return await FirebaseFirestore.instance
-          .collection(_investmentModelsKey)
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(_investmentModelsKey)
-          .doc(index)
-          .update({
-        'name': investmentModel.name,
-        'unitAmount': investmentModel.unitAmount,
-        'unitPrice': investmentModel.unitPrice,
-        'date': investmentModel.date,
-        'value': investmentModel.value,
-      });
+      String index, InvestmentModel investmentModel) async {
+    return await FirebaseFirestore.instance
+        .collection(_investmentModelsKey)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(_investmentModelsKey)
+        .doc(index)
+        .update({
+      'name': investmentModel.name,
+      'unitAmount': investmentModel.unitAmount,
+      'unitPrice': investmentModel.unitPrice,
+      'date': investmentModel.date,
+      'value': investmentModel.value,
+    });
   }
 
   Future<void> deleteInvestmentModel(String id) async {

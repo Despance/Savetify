@@ -14,6 +14,4 @@ class InvestmentModel {
     required this.date,
     required this.value,
   });
-
- 
 }
