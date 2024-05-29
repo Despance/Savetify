@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
@@ -22,6 +25,14 @@ class _InvestmentPageState extends State<InvestmentPage> {
   late TextEditingController _unitPriceController;
   String _date = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String selectedType = 'Unit Amount';
+
+  bool _isInvestmentValueVisible = true;
+
+  void _toggleInvestmentValueVisibility() {
+    setState(() {
+      _isInvestmentValueVisible = !_isInvestmentValueVisible;
+    });
+  }
 
   @override
   void initState() {
@@ -50,9 +61,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
       _totalValueController.text = investment.value;
       _unitPriceController.text = investment.unitPrice;
       _date = investment.date;
-      selectedType = _unitAmountController.text.isNotEmpty
-          ? 'Unit Amount'
-          : 'Total Value';
+      selectedType =
+          _unitAmountController.text.isNotEmpty ? 'Unit Amount' : 'Total Value';
     } else {
       _nameController.clear();
       _unitAmountController.clear();
@@ -171,7 +181,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                           );
                           if (pickedDate != null) {
                             setState(() {
-                              _date = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              _date =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
                             });
                           }
                         },
@@ -211,7 +222,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         : _totalValueController.text,
                   );
                   if (investment != null && index != null) {
-                    await viewModel.updateInvestmentModel(investment.id!, newInvestment);
+                    await viewModel.updateInvestmentModel(
+                        investment.id!, newInvestment);
                   } else {
                     await viewModel.addInvestmentModel(newInvestment);
                   }
@@ -230,63 +242,149 @@ class _InvestmentPageState extends State<InvestmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Investments'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showInvestmentForm(context),
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: viewModel.loadInvestmentModels(),
         builder: (context, snapshot) {
-          return snapshot.connectionState == ConnectionState.waiting ? CircularProgressIndicator() : Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: viewModel.investmentModels.length,
-                  itemBuilder: (context, index) {
-                    final investment = viewModel.investmentModels[index];
-                    return Card(
-                      margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(investment.name),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Unit Amount: ${investment.unitAmount}'),
-                            Text('Unit Price: \$${investment.unitPrice}'),
-                            Text('Total Value: \$${investment.value}'),
-                            Text('Date: ${investment.date}'),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => _showInvestmentForm(context,
-                                  investment: investment, index: index),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return FutureBuilder<double>(
+              future: viewModel.getTotalInvestmentModelsValue(),
+              builder: (context, totalSnapshot) {
+                if (totalSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (totalSnapshot.hasError) {
+                  return Center(child: Text('Error: ${totalSnapshot.error}'));
+                } else {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width / 2,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Theme.of(context).colorScheme.primary,
+                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).colorScheme.tertiary,
+                              ],
+                              transform: const GradientRotation(pi / 4),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () async {
-                                await viewModel.deleteInvestmentModel(index);
-                                setState(() {}); // To update the UI after deletion
-                              },
-                            ),
-                          ],
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.grey.shade300,
+                                offset: const Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Total Investments",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _isInvestmentValueVisible
+                                        ? "\$${totalSnapshot.data!.toStringAsFixed(2)}"
+                                        : '***',
+                                    style: const TextStyle(
+                                      fontSize: 35,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  IconButton(
+                                    icon: Icon(
+                                      _isInvestmentValueVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: _toggleInvestmentValueVisibility,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        }
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: viewModel.investmentModels.length,
+                          itemBuilder: (context, index) {
+                            final investment = viewModel.investmentModels[index];
+                            return Card(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              child: ListTile(
+                                title: Text(investment.name),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Unit Amount: ${investment.unitAmount}'),
+                                    Text('Unit Price: ${investment.unitPrice}'),
+                                    Text('Date: ${investment.date}'),
+                                    Text('Total Value: ${investment.value}'),
+                                  ],
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(CupertinoIcons.pencil),
+                                      onPressed: () => _showInvestmentForm(
+                                          context,
+                                          investment: investment,
+                                          index: index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(CupertinoIcons.trash),
+                                      onPressed: () async {
+                                        await viewModel.deleteInvestmentModel(index);
+                                        setState(() {}); // To update the UI after deletion
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            );
+          }
+        },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showInvestmentForm(context),
+        child: const Icon(CupertinoIcons.add),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
