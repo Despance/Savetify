@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/invesment/model/InvestmentModel.dart';
@@ -10,7 +12,9 @@ import 'package:savetify/src/features/report/model/ReportRepository.dart';
 class ReportViewModel {
   List<ReportModel> _reportModel = [];
   late ReportRepository _reportRepository;
+  List<ExpenseModel> _expenses = [];
 
+  ExpenseRepository() {}
   ReportViewModel();
   ReportViewModel.retrieveReports(this._reportRepository) {
     _reportModel = _reportRepository.getReports();
@@ -60,6 +64,31 @@ class ReportViewModel {
       return '';
     }
     return _reportModel.elementAt(index).description;
+  }
+
+  getExpensesFromFirebase() async {
+    try {
+      var snapshot = await FirebaseFirestore.instance
+          .collection('expenses')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('user_expenses')
+          .get();
+      snapshot.docs.forEach((doc) {
+        _expenses.add(ExpenseModel(
+          id: doc.id,
+          description: doc['description'],
+          amount: doc['amount'],
+          date: doc['date'].toDate(),
+          category: doc['category'],
+        ));
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List<ExpenseModel> getExpenses() {
+    return _expenses.reversed.toList();
   }
 
   DateTime getStartingDate(int index) {
@@ -127,7 +156,12 @@ class ReportViewModel {
   }
 
   getExpenseForTime(DateTime startingDate, DateTime endingDate) {
-    List<ExpenseModel> expenses = _reportRepository.getExpenses();
+    List<ExpenseModel> expenses = _expenses
+        .where((expense) =>
+            expense.date.isAfter(startingDate) &&
+            expense.date.isBefore(endingDate))
+        .toList();
+    ;
     List<ExpenseModel> newExpenses = [];
     for (ExpenseModel expense in expenses) {
       if (expense.date.isAfter(startingDate) &&

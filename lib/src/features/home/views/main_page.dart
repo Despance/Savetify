@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
   void _showPopupMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) {
@@ -36,8 +36,8 @@ class _MainPageState extends State<MainPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(CupertinoIcons.chart_pie),
-                title: Text('Investments'),
+                leading: const Icon(CupertinoIcons.chart_pie),
+                title: const Text('Investments'),
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
@@ -46,8 +46,8 @@ class _MainPageState extends State<MainPage> {
                 },
               ),
               ListTile(
-                leading: Icon(CupertinoIcons.arrow_down),
-                title: Text('Expenses'),
+                leading: const Icon(CupertinoIcons.arrow_down),
+                title: const Text('Expenses'),
                 onTap: () {
                   Navigator.pop(context);
                   setState(() {
@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
                 },
               ),
               ListTile(
-                leading: Icon(CupertinoIcons.arrow_up),
+                leading: const Icon(CupertinoIcons.arrow_up),
                 title: Text('Income'),
                 onTap: () {
                   Navigator.pop(context);
