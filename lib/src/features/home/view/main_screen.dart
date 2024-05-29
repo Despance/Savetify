@@ -1,13 +1,9 @@
 import 'dart:math';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:savetify/src/features/data/data.dart';
 import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
-import 'package:savetify/src/features/home/view/account_cards.dart';
 import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';
 import 'package:savetify/src/features/profile/model/user.dart';
 import 'package:savetify/src/features/profile/view/profile_view.dart';
