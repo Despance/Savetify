@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:savetify/src/features/auth/view/add_details_view.dart';
+import 'package:savetify/src/features/auth/view/auth_view.dart';
 import 'package:savetify/src/features/profile/model/user.dart';
 import 'package:savetify/src/features/profile/view/risk_profile_chart.dart';
 
@@ -20,7 +21,10 @@ class ProfileView extends StatelessWidget {
         }
       }
       await FirebaseAuth.instance.signOut();
-      Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthView()),
+          (route) => false);
     } catch (e) {
       print('Sign out error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -31,7 +35,7 @@ class ProfileView extends StatelessWidget {
     }
   }
 
-  Future<UserModel> _getUser() async {
+  Future<UserModel> getUser() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     DocumentSnapshot doc = await FirebaseFirestore.instance
@@ -98,7 +102,7 @@ class ProfileView extends StatelessWidget {
               ),
             );
           },
-          future: _getUser(),
+          future: getUser(),
         ),
       ),
     );

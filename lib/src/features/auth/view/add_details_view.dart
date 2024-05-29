@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:savetify/src/features/home/view/home_screen.dart';
 import 'package:savetify/src/features/profile/model/user.dart';
 
 class AddDetailsView extends StatefulWidget {
@@ -207,7 +208,16 @@ class _AddDetailsViewState extends State<AddDetailsView> {
                                         'Details saved successfully! Redirecting to profile page.'),
                                   ),
                                 );
-                                Navigator.pop(context);
+                                if (userModel == null) {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen()),
+                                      (route) => false);
+                                } else {
+                                  Navigator.pop(context);
+                                }
                               });
                             }
                           } else {

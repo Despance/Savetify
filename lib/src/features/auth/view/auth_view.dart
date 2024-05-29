@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:savetify/src/features/auth/view/sign_in_view.dart';
-import 'package:savetify/src/features/profile/view/profile_view.dart';
+import 'package:savetify/src/features/home/view/home_screen.dart';
 
 class AuthView extends StatefulWidget {
   const AuthView({super.key});
@@ -56,6 +56,6 @@ class _AuthViewState extends State<AuthView> {
 
   @override
   Widget build(BuildContext context) {
-    return !isAuth ? const LoginPage() : const ProfileView();
+    return !isAuth ? const LoginPage() : const HomeScreen();
   }
 }

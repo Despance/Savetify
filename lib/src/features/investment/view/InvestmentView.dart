@@ -63,6 +63,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
       _date = investment.date;
       selectedType =
           _unitAmountController.text.isNotEmpty ? 'Unit Amount' : 'Total Value';
+      selectedType =
+          _unitAmountController.text.isNotEmpty ? 'Unit Amount' : 'Total Value';
     } else {
       _nameController.clear();
       _unitAmountController.clear();

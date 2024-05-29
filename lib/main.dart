@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
                   : ThemeMode.light;
 
               return MaterialApp(
-                title: 'Flutter Demo',
+                title: 'Savetify',
                 theme: SavetifyTheme.lightTheme,
                 darkTheme: SavetifyTheme.darkTheme,
                 themeMode: themeMode,

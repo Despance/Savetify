@@ -6,9 +6,6 @@ class MyAppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: "Expense Tracker",
-      home: HomeScreen(),
-    );
+    return const HomeScreen();
   }
 }
