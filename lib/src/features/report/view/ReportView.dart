@@ -38,8 +38,8 @@ class _ReportViewState extends State<ReportView> {
                                   color: Theme.of(context).primaryColor),
                               textAlign: TextAlign.center)),
                       SizedBox(
-                        height: 300,
-                        width: 300, 
+                        height: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.width,
                         child: InvestmentPieChart(
                             investments: reportViewModel.getInvestments()),
                       ),
