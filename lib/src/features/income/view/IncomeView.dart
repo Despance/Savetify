@@ -37,7 +37,7 @@ class _IncomePageState extends State<IncomePage> {
         future: _initData(),
         builder: (context, snapshot) {
           return snapshot.connectionState == ConnectionState.waiting
-              ? const CircularProgressIndicator()
+              ? const Center(child: CircularProgressIndicator())
               : Center(
                   child: ListView(
                     scrollDirection: Axis.vertical,

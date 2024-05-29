@@ -55,7 +55,7 @@ class MainScreenState extends State<MainScreen> {
           future: initPage(),
           builder: (context, snapshot) {
             return snapshot.connectionState == ConnectionState.waiting
-                ? const CircularProgressIndicator()
+                ? const Center(child: CircularProgressIndicator())
                 : Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25, vertical: 10),
