@@ -6,7 +6,7 @@ import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/income/view/IncomeView.dart';
-import 'package:savetify/src/features/investment/view/investment.dart';
+import 'package:savetify/src/features/investment/view/InvestmentView.dart';
 import 'package:savetify/src/features/report/view/ReportView.dart';
 import 'package:savetify/src/theme/theme.dart';
 
