@@ -102,7 +102,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                       TextFormField(
                         controller: _unitPriceController,
                         decoration: const InputDecoration(
-                          labelText: 'Investment Unit Price (\$)',
+                          labelText: 'Investment Unit Price (\₺)',
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
@@ -160,7 +160,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                           : TextFormField(
                               controller: _totalValueController,
                               decoration: const InputDecoration(
-                                labelText: 'Total Value (\$)',
+                                labelText: 'Total Value (₺)',
                               ),
                               keyboardType: TextInputType.number,
                               validator: (value) {
@@ -322,7 +322,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                 children: [
                                   Text(
                                     _isInvestmentValueVisible
-                                        ? "\$ ${totalSnapshot.data!.toStringAsFixed(2)}"
+                                        ? "₺ ${totalSnapshot.data!.toStringAsFixed(2)}"
                                         : '****',
                                     style: const TextStyle(
                                       fontSize: 35,
@@ -367,7 +367,7 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                     Text('Unit Price: ${investment.unitPrice}'),
                                     Text('Date: ${investment.date}'),
                                     Text(_isInvestmentValueVisible
-                                        ? 'Total Value: ${investment.value} \$'
+                                        ? 'Total Value: ${investment.value} ₺'
                                         : 'Total Value: ****'),
                                   ],
                                 ),
