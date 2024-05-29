@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
@@ -36,7 +38,7 @@ class InvestmentPieChart extends StatelessWidget {
       final double percentage =
           (double.parse(investment.value) / totalValue) * 100;
       return PieChartSectionData(
-        color: _getColor(investment.name),
+        color: getRandomColor(),
         value: double.parse(investment.value),
         title: '${percentage.toStringAsFixed(1)}%',
         radius: 50,
@@ -45,17 +47,14 @@ class InvestmentPieChart extends StatelessWidget {
     }).toList();
   }
 
-  Color _getColor(String name) {
-    // Define colors for each investment name
-    Map<String, Color> colorMap = {
-      'Stocks': Colors.blue,
-      'Bonds': Colors.green,
-      'Real Estate': Colors.red,
-      'Cryptocurrency': Colors.orange,
-      'Commodities': Colors.purple,
-      // Add more as needed
-    };
-    return colorMap[name] ?? Colors.grey;
+  Color getRandomColor() {
+    final Random random = Random();
+    return Color.fromARGB(
+        255, // Alpha value (fully opaque)
+        random.nextInt(256), // Red value
+        random.nextInt(256), // Green value
+        random.nextInt(256) // Blue value
+        );
   }
 
   Widget _buildReport() {
