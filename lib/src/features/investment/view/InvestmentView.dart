@@ -266,7 +266,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                   return Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width / 2,
@@ -291,29 +292,17 @@ class _InvestmentPageState extends State<InvestmentPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                "Total Investments",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    _isInvestmentValueVisible
-                                        ? "\$${totalSnapshot.data!.toStringAsFixed(2)}"
-                                        : '***',
-                                    style: const TextStyle(
-                                      fontSize: 35,
+                                  const Text(
+                                    "Total Investments",
+                                    style: TextStyle(
+                                      fontSize: 16,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
                                   IconButton(
                                     icon: Icon(
                                       _isInvestmentValueVisible
@@ -325,6 +314,34 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                   ),
                                 ],
                               ),
+                              // const SizedBox(width: 10),
+
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _isInvestmentValueVisible
+                                        ? "\$ ${totalSnapshot.data!.toStringAsFixed(2)}"
+                                        : '****',
+                                    style: const TextStyle(
+                                      fontSize: 35,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  // IconButton(
+                                  //   icon: Icon(
+                                  //     _isInvestmentValueVisible
+                                  //         ? Icons.visibility
+                                  //         : Icons.visibility_off,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  //   onPressed: _toggleInvestmentValueVisibility,
+                                  // ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -334,7 +351,8 @@ class _InvestmentPageState extends State<InvestmentPage> {
                         child: ListView.builder(
                           itemCount: viewModel.investmentModels.length,
                           itemBuilder: (context, index) {
-                            final investment = viewModel.investmentModels[index];
+                            final investment =
+                                viewModel.investmentModels[index];
                             return Card(
                               margin: const EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 16),
@@ -343,10 +361,14 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Unit Amount: ${investment.unitAmount}'),
+                                    Text(_isInvestmentValueVisible
+                                        ? 'Unit Amount: ${investment.unitAmount}'
+                                        : 'Unit Amount: ****'),
                                     Text('Unit Price: ${investment.unitPrice}'),
                                     Text('Date: ${investment.date}'),
-                                    Text('Total Value: ${investment.value}'),
+                                    Text(_isInvestmentValueVisible
+                                        ? 'Total Value: ${investment.value} \$'
+                                        : 'Total Value: ****'),
                                   ],
                                 ),
                                 trailing: Row(
@@ -362,8 +384,10 @@ class _InvestmentPageState extends State<InvestmentPage> {
                                     IconButton(
                                       icon: const Icon(CupertinoIcons.trash),
                                       onPressed: () async {
-                                        await viewModel.deleteInvestmentModel(index);
-                                        setState(() {}); // To update the UI after deletion
+                                        await viewModel
+                                            .deleteInvestmentModel(index);
+                                        setState(
+                                            () {}); // To update the UI after deletion
                                       },
                                     ),
                                   ],
