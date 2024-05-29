@@ -9,14 +9,15 @@ class IncomePage extends StatefulWidget {
   const IncomePage({super.key});
 
   @override
-  State<IncomePage> createState() => _IncomePageState();
+  State<IncomePage> createState() => IncomePageState();
 }
 
-class _IncomePageState extends State<IncomePage> {
+class IncomePageState extends State<IncomePage> {
   final IncomeViewModel incomeViewModel = IncomeViewModel();
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
   late DateTime _selectedDate;
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +25,6 @@ class _IncomePageState extends State<IncomePage> {
     _descriptionController = TextEditingController();
     _amountController = TextEditingController();
     _selectedDate = DateTime.now();
-    // TODO: implement initState
   }
 
   @override
@@ -53,7 +53,7 @@ class _IncomePageState extends State<IncomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addIncome(),
+        onPressed: () => addIncome(),
         heroTag: 'addIncome',
         tooltip: 'Add Income',
         child: const Icon(Icons.add),
@@ -61,7 +61,7 @@ class _IncomePageState extends State<IncomePage> {
     );
   }
 
-  _addIncome() {
+  addIncome() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -112,7 +112,7 @@ class _IncomePageState extends State<IncomePage> {
     return "${date.day}/${date.month}/${date.year}";
   }
 
-  Widget addIncomeScreen() {
+  addIncomeScreen() {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 32.0, left: 16, right: 16),
@@ -138,23 +138,24 @@ class _IncomePageState extends State<IncomePage> {
               ),
             ),
             TextButton(
-              onPressed: () async => _selectedDate = await _selectDate(),
-              child: const Text("Select Start Date"),
+              onPressed: () async {
+                _selectedDate = (await _selectDate())!;
+              },
+              child: const Text("Select Date"),
             ),
             TextButton(
-              onPressed: () => {
+              onPressed: () {
                 if (_descriptionController.text.isNotEmpty &&
-                    _amountController.text.isNotEmpty)
-                  {
-                    incomeViewModel.addIncomesToFirebase(
-                      IncomeModel(
-                          description: _descriptionController.text,
-                          amount: double.parse(_amountController.text),
-                          date: _selectedDate),
-                    ),
-                  },
-                Navigator.pop(context),
-                setState(() => {}), // refresh the view
+                    _amountController.text.isNotEmpty) {
+                  incomeViewModel.addIncomesToFirebase(
+                    IncomeModel(
+                        description: _descriptionController.text,
+                        amount: double.parse(_amountController.text),
+                        date: _selectedDate),
+                  );
+                  Navigator.pop(context);
+                  setState(() {});
+                }
               },
               child: const Text("Save"),
             ),
@@ -164,7 +165,7 @@ class _IncomePageState extends State<IncomePage> {
     );
   }
 
-  _selectDate() {
+  Future<DateTime?> _selectDate() {
     return showDatePicker(
       context: context,
       initialDate: DateTime.now(),
