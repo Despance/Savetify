@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
 import 'package:savetify/src/features/investment/model/InvestmentRepository.dart';
 
@@ -26,13 +25,14 @@ class InvestmentViewModel {
     await _repository.deleteInvestmentModel(investmentModels[index].id!);
   }
 
-  double getTotalInvestmentModelsValue() {
-    double total = 0.0;
-    for (var investmentModel in investmentModels) {
-      total += double.parse(investmentModel.value);
-    }
-    return total;
+  Future<double> getTotalInvestmentModelsValue() async {
+  double total = 0.0;
+  for (var investmentModel in investmentModels) {
+    total += double.parse(investmentModel.value);
   }
+  return total;
+}
+
 
   void toggleTotalValueVisibility() {
     obscureTotalValue = !obscureTotalValue;
