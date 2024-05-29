@@ -102,7 +102,7 @@ class InvestmentPageState extends State<InvestmentPage> {
                       TextFormField(
                         controller: _unitPriceController,
                         decoration: const InputDecoration(
-                          labelText: 'Investment Unit Price (\$)',
+                          labelText: 'Investment Unit Price (\₺)',
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
@@ -160,7 +160,7 @@ class InvestmentPageState extends State<InvestmentPage> {
                           : TextFormField(
                               controller: _totalValueController,
                               decoration: const InputDecoration(
-                                labelText: 'Total Value (\$)',
+                                labelText: 'Total Value (₺)',
                               ),
                               keyboardType: TextInputType.number,
                               validator: (value) {
@@ -292,29 +292,17 @@ class InvestmentPageState extends State<InvestmentPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                "Total Investments",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    _isInvestmentValueVisible
-                                        ? "\$${totalSnapshot.data!.toStringAsFixed(2)}"
-                                        : '***',
-                                    style: const TextStyle(
-                                      fontSize: 35,
+                                  const Text(
+                                    "Total Investments",
+                                    style: TextStyle(
+                                      fontSize: 16,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
                                   IconButton(
                                     icon: Icon(
                                       _isInvestmentValueVisible
@@ -324,6 +312,34 @@ class InvestmentPageState extends State<InvestmentPage> {
                                     ),
                                     onPressed: _toggleInvestmentValueVisibility,
                                   ),
+                                ],
+                              ),
+                              // const SizedBox(width: 10),
+
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _isInvestmentValueVisible
+                                        ? "₺ ${totalSnapshot.data!.toStringAsFixed(2)}"
+                                        : '****',
+                                    style: const TextStyle(
+                                      fontSize: 35,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  // IconButton(
+                                  //   icon: Icon(
+                                  //     _isInvestmentValueVisible
+                                  //         ? Icons.visibility
+                                  //         : Icons.visibility_off,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  //   onPressed: _toggleInvestmentValueVisibility,
+                                  // ),
                                 ],
                               ),
                             ],
@@ -347,9 +363,14 @@ class InvestmentPageState extends State<InvestmentPage> {
                                   children: [
                                     Text(
                                         'Unit Amount: ${investment.unitAmount}'),
+                                    Text(_isInvestmentValueVisible
+                                        ? 'Unit Amount: ${investment.unitAmount}'
+                                        : 'Unit Amount: ****'),
                                     Text('Unit Price: ${investment.unitPrice}'),
                                     Text('Date: ${investment.date}'),
-                                    Text('Total Value: ${investment.value}'),
+                                    Text(_isInvestmentValueVisible
+                                        ? 'Total Value: ${investment.value} ₺'
+                                        : 'Total Value: ****'),
                                   ],
                                 ),
                                 trailing: Row(
