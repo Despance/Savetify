@@ -7,7 +7,7 @@ import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/income/view/IncomeView.dart';
 import 'package:savetify/src/features/investment/view/investment.dart';
-import 'package:savetify/src/features/report/view_model/stats.dart';
+import 'package:savetify/src/features/report/view/ReportView.dart';
 import 'package:savetify/src/theme/theme.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,7 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
     widgetList = [
       MainScreen(key: mainScreenKey),
       const IncomePage(),
-      const InvestmentPage()
+      const InvestmentPage(),
+      const ReportView(),
     ];
     selectedColor = SavetifyTheme.lightTheme.primaryColor;
   }
@@ -67,6 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icon(CupertinoIcons.money_dollar_circle,
                       color: index == 2 ? selectedColor : unselectedColor),
                   label: 'Invesments'),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.bookmark,
+                      color: index == 3 ? selectedColor : unselectedColor),
+                  label: 'Reports'),
             ],
           ),
         ),
@@ -105,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
           0 => widgetList[0],
           1 => widgetList[1],
           2 => widgetList[2],
+          3 => widgetList[3],
           // TODO: Handle this case.
           int() => throw UnimplementedError(),
         });

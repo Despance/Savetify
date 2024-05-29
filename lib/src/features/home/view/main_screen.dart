@@ -104,7 +104,9 @@ class MainScreenState extends State<MainScreen> {
                                             color: SavetifyTheme.lightTheme
                                                 .secondaryHeaderColor)),
                                     Text(
-                                      userModel!.name,
+                                      userModel == null
+                                          ? 'User'
+                                          : userModel!.name,
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
