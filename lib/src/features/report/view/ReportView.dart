@@ -32,7 +32,7 @@ class _ReportViewState extends State<ReportView> {
                     children: [
                       Padding(
                           padding: const EdgeInsets.all(16),
-                          child: Text("Report",
+                          child: Text("Investment Report",
                               style: TextStyle(
                                   fontSize: 24,
                                   color: Theme.of(context).primaryColor),
