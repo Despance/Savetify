@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
@@ -63,8 +64,6 @@ class InvestmentPageState extends State<InvestmentPage> {
       _date = investment.date;
       selectedType =
           _unitAmountController.text.isNotEmpty ? 'Unit Amount' : 'Total Value';
-      selectedType =
-          _unitAmountController.text.isNotEmpty ? 'Unit Amount' : 'Total Value';
     } else {
       _nameController.clear();
       _unitAmountController.clear();
@@ -80,126 +79,127 @@ class InvestmentPageState extends State<InvestmentPage> {
         return AlertDialog(
           title:
               Text(investment != null ? 'Edit Investment' : 'New Investment'),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        controller: _nameController,
-                        decoration:
-                            const InputDecoration(labelText: 'Investment Name'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an investment name';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: _unitPriceController,
-                        decoration: const InputDecoration(
-                          labelText: 'Investment Unit Price (\₺)',
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an investment unit price';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          _unitPriceController.value =
-                              _unitPriceController.value.copyWith(
-                            text: value.replaceAll(',', '.'),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        value: selectedType,
-                        items:
-                            ['Unit Amount', 'Total Value'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedType = newValue!;
-                            if (selectedType == 'Unit Amount') {
-                              _totalValueController.clear();
-                            } else {
-                              _unitAmountController.clear();
+          content: SingleChildScrollView(
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          decoration:
+                              const InputDecoration(labelText: 'Investment Name'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an investment name';
                             }
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Select Input Type',
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      selectedType == 'Unit Amount'
-                          ? TextFormField(
-                              controller: _unitAmountController,
-                              decoration: const InputDecoration(
-                                labelText: 'Investment Unit Amount',
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter an investment unit amount';
-                                }
-                                return null;
-                              },
-                            )
-                          : TextFormField(
-                              controller: _totalValueController,
-                              decoration: const InputDecoration(
-                                labelText: 'Total Value (₺)',
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the total value';
-                                }
-                                return null;
-                              },
-                            ),
-                      TextFormField(
-                        initialValue: _date,
-                        decoration:
-                            const InputDecoration(labelText: 'Investment Date'),
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime.now(),
-                          );
-                          if (pickedDate != null) {
+                        TextFormField(
+                          controller: _unitPriceController,
+                          decoration: const InputDecoration(
+                            labelText: 'Investment Unit Price (\₺)',
+                          ),
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an investment unit price';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            _unitPriceController.value =
+                                _unitPriceController.value.copyWith(
+                              text: value.replaceAll(',', '.'),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<String>(
+                          value: selectedType,
+                          items: ['Unit Amount', 'Total Value']
+                              .map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
                             setState(() {
-                              _date =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                              selectedType = newValue!;
+                              if (selectedType == 'Unit Amount') {
+                                _totalValueController.clear();
+                              } else {
+                                _unitAmountController.clear();
+                              }
                             });
-                          }
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an investment date';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Select Input Type',
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        selectedType == 'Unit Amount'
+                            ? TextFormField(
+                                controller: _unitAmountController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Investment Unit Amount',
+                                ),
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter an investment unit amount';
+                                  }
+                                  return null;
+                                },
+                              )
+                            : TextFormField(
+                                controller: _totalValueController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Total Value (₺)',
+                                ),
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the total value';
+                                  }
+                                  return null;
+                                },
+                              ),
+                        TextFormField(
+                          initialValue: _date,
+                          decoration:
+                              const InputDecoration(labelText: 'Investment Date'),
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                _date = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              });
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an investment date';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -251,7 +251,7 @@ class InvestmentPageState extends State<InvestmentPage> {
         future: viewModel.loadInvestmentModels(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -259,100 +259,98 @@ class InvestmentPageState extends State<InvestmentPage> {
               future: viewModel.getTotalInvestmentModelsValue(),
               builder: (context, totalSnapshot) {
                 if (totalSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (totalSnapshot.hasError) {
                   return Center(child: Text('Error: ${totalSnapshot.error}'));
                 } else {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width / 2,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).colorScheme.primary,
-                                Theme.of(context).colorScheme.secondary,
-                                Theme.of(context).colorScheme.tertiary,
-                              ],
-                              transform: const GradientRotation(pi / 4),
-                            ),
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Colors.grey.shade300,
-                                offset: const Offset(5, 5),
-                              ),
-                            ],
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.04,
+                            vertical: MediaQuery.of(context).size.height * 0.02,
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: kIsWeb
+                                ? MediaQuery.of(context).size.width / 4
+                                : MediaQuery.of(context).size.width / 2,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.secondary,
+                                  Theme.of(context).colorScheme.tertiary,
+                                ],
+                                transform: const GradientRotation(pi / 4),
+                              ),
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4,
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(5, 5),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text(
-                                    "Total Investments",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Total Investments",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          _isInvestmentValueVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed:
+                                            _toggleInvestmentValueVisibility,
+                                      ),
+                                    ],
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      _isInvestmentValueVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: _toggleInvestmentValueVisibility,
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _isInvestmentValueVisible
+                                            ? "₺ ${totalSnapshot.data!.toStringAsFixed(2)}"
+                                            : '****',
+                                        style: const TextStyle(
+                                          fontSize: 35,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                    ],
                                   ),
                                 ],
                               ),
-                              // const SizedBox(width: 10),
-
-                              const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    _isInvestmentValueVisible
-                                        ? "₺ ${totalSnapshot.data!.toStringAsFixed(2)}"
-                                        : '****',
-                                    style: const TextStyle(
-                                      fontSize: 35,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  // IconButton(
-                                  //   icon: Icon(
-                                  //     _isInvestmentValueVisible
-                                  //         ? Icons.visibility
-                                  //         : Icons.visibility_off,
-                                  //     color: Colors.white,
-                                  //   ),
-                                  //   onPressed: _toggleInvestmentValueVisibility,
-                                  // ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: ListView.builder(
+                        const SizedBox(height: 20),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: viewModel.investmentModels.length,
                           itemBuilder: (context, index) {
-                            final investment =
-                                viewModel.investmentModels[index];
+                            final investment = viewModel.investmentModels[index];
                             return Card(
                               margin: const EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 16),
@@ -361,8 +359,6 @@ class InvestmentPageState extends State<InvestmentPage> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                        'Unit Amount: ${investment.unitAmount}'),
                                     Text(_isInvestmentValueVisible
                                         ? 'Unit Amount: ${investment.unitAmount}'
                                         : 'Unit Amount: ****'),
@@ -386,8 +382,7 @@ class InvestmentPageState extends State<InvestmentPage> {
                                     IconButton(
                                       icon: const Icon(CupertinoIcons.trash),
                                       onPressed: () async {
-                                        await viewModel
-                                            .deleteInvestmentModel(index);
+                                        await viewModel.deleteInvestmentModel(index);
                                         setState(
                                             () {}); // To update the UI after deletion
                                       },
@@ -398,8 +393,8 @@ class InvestmentPageState extends State<InvestmentPage> {
                             );
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 }
               },
