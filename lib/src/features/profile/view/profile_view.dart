@@ -15,11 +15,8 @@ class ProfileView extends StatelessWidget {
 
   Future<void> _signOut(BuildContext context) async {
     try {
-      if (!kIsWeb) {
-        if (Platform.isWindows) {
-          await GoogleSignIn().signOut();
-        }
-      }
+      if (!kIsWeb) if (Platform.isWindows) await GoogleSignIn().disconnect();
+
       await FirebaseAuth.instance.signOut();
       Navigator.pushAndRemoveUntil(
           context,
@@ -61,43 +58,46 @@ class ProfileView extends StatelessWidget {
                       child: CircularProgressIndicator()));
             }
 
-            return Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Hello ${snapshot.data?.name} !',
-                        style: const TextStyle(fontSize: 48)),
-                    if (snapshot.data != null)
-                      RiskProfileChart(user: snapshot.data!),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddDetailsView(
-                                      user: snapshot.data,
-                                    )));
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('Edit your Profile',
-                            style: TextStyle(fontSize: 16)),
+            return SingleChildScrollView(
+              child: Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Hello ${snapshot.data?.name} !',
+                          style: const TextStyle(fontSize: 48)),
+                      if (snapshot.data != null)
+                        RiskProfileChart(user: snapshot.data!),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddDetailsView(
+                                        user: snapshot.data,
+                                      )));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Edit your Profile',
+                              style: TextStyle(fontSize: 16)),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        _signOut(context);
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('Sign out', style: TextStyle(fontSize: 16)),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          _signOut(context);
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child:
+                              Text('Sign out', style: TextStyle(fontSize: 16)),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

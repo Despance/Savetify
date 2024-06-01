@@ -1,9 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
-import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/income/view/IncomeView.dart';
 import 'package:savetify/src/features/investment/view/InvestmentView.dart';
@@ -76,37 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: index == 3 ? selectedColor : unselectedColor),
                   label: 'Reports'),
             ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return AddExpense();
-                },
-              ),
-            ).then((value) => mainScreenKey.currentState!.setState(() {}));
-          },
-          shape: const CircleBorder(),
-          child: Container(
-            alignment: Alignment.center,
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  SavetifyTheme.lightTheme.primaryColor,
-                  const Color.fromARGB(239, 108, 247, 247),
-                  const Color.fromARGB(255, 96, 91, 255),
-                ],
-                transform: const GradientRotation(pi / 5),
-              ),
-            ),
-            child: const Icon(CupertinoIcons.add),
           ),
         ),
         body: switch (index) {

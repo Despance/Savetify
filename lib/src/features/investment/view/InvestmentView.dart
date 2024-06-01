@@ -90,8 +90,8 @@ class InvestmentPageState extends State<InvestmentPage> {
                       children: [
                         TextFormField(
                           controller: _nameController,
-                          decoration:
-                              const InputDecoration(labelText: 'Investment Name'),
+                          decoration: const InputDecoration(
+                              labelText: 'Investment Name'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter an investment name';
@@ -172,8 +172,8 @@ class InvestmentPageState extends State<InvestmentPage> {
                               ),
                         TextFormField(
                           initialValue: _date,
-                          decoration:
-                              const InputDecoration(labelText: 'Investment Date'),
+                          decoration: const InputDecoration(
+                              labelText: 'Investment Date'),
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
                               context: context,
@@ -183,7 +183,8 @@ class InvestmentPageState extends State<InvestmentPage> {
                             );
                             if (pickedDate != null) {
                               setState(() {
-                                _date = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                _date =
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
                               });
                             }
                           },
@@ -243,10 +244,6 @@ class InvestmentPageState extends State<InvestmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Investments'),
-      ),
       body: FutureBuilder(
         future: viewModel.loadInvestmentModels(),
         builder: (context, snapshot) {
@@ -267,8 +264,16 @@ class InvestmentPageState extends State<InvestmentPage> {
                     child: Column(
                       children: [
                         Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text("Investments",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    color: Theme.of(context).primaryColor),
+                                textAlign: TextAlign.center)),
+                        Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.of(context).size.width * 0.04,
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.04,
                             vertical: MediaQuery.of(context).size.height * 0.02,
                           ),
                           child: Container(
@@ -350,7 +355,8 @@ class InvestmentPageState extends State<InvestmentPage> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: viewModel.investmentModels.length,
                           itemBuilder: (context, index) {
-                            final investment = viewModel.investmentModels[index];
+                            final investment =
+                                viewModel.investmentModels[index];
                             return Card(
                               margin: const EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 16),
@@ -382,7 +388,8 @@ class InvestmentPageState extends State<InvestmentPage> {
                                     IconButton(
                                       icon: const Icon(CupertinoIcons.trash),
                                       onPressed: () async {
-                                        await viewModel.deleteInvestmentModel(index);
+                                        await viewModel
+                                            .deleteInvestmentModel(index);
                                         setState(
                                             () {}); // To update the UI after deletion
                                       },

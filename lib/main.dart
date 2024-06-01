@@ -50,6 +50,10 @@ class MyApp extends StatelessWidget {
 
           return MaterialApp(
             initialRoute: '/',
+            darkTheme: SavetifyTheme.darkTheme,
+            theme: SavetifyTheme.lightTheme,
+            title: 'Savetify',
+            debugShowCheckedModeBanner: false,
             routes: {
               '/login': (context) => const LoginPage(),
               '/signup': (context) => const SignupPage(),
@@ -58,24 +62,11 @@ class MyApp extends StatelessWidget {
               '/auth': (context) => const AuthView(),
               '/app': (context) => const MyAppView(),
             },
-            theme: ThemeData.light(),
-            builder: (context, child) {
-              final Brightness systemBrightness =
-                  MediaQuery.of(context).platformBrightness;
-
-              final ThemeMode themeMode = systemBrightness == Brightness.dark
-                  ? ThemeMode.dark
-                  : ThemeMode.light;
-
-              return MaterialApp(
-                title: 'Savetify',
-                theme: SavetifyTheme.lightTheme,
-                darkTheme: SavetifyTheme.darkTheme,
-                themeMode: themeMode,
-                home: const AuthView(),
-                debugShowCheckedModeBanner: false,
-              );
-            },
+            themeMode:
+                MediaQuery.of(context).platformBrightness == Brightness.dark
+                    ? ThemeMode.dark
+                    : ThemeMode.light,
+            home: const AuthView(),
           );
         });
   }

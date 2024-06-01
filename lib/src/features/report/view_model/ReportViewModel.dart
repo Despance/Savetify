@@ -1,4 +1,4 @@
-import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
+import 'package:savetify/src/features/expense/model/expense_model.dart';
 import 'package:savetify/src/features/income/model/IncomeModel.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
 import 'package:savetify/src/features/report/model/ReportRepository.dart';

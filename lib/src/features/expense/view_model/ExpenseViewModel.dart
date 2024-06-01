@@ -1,5 +1,5 @@
-import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
-import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
+import 'package:savetify/src/features/expense/model/expense_model.dart';
+import 'package:savetify/src/features/expense/model/expense_repository.dart';
 
 class ExpenseViewModel {
   ExpenseRepository _expenseRepository;

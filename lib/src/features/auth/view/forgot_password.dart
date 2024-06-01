@@ -57,14 +57,12 @@ class ForgotPasswordPage extends StatelessWidget {
                                 ),
                               ))
                       .catchError((error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    return ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(error.toString()),
                       ),
                     );
-                  });
-
-                  Navigator.pop(context);
+                  }).then((value) => Navigator.pop(context));
                 },
                 child: const Text('Reset Password'),
               ),
