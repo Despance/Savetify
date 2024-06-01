@@ -29,7 +29,7 @@ class ExpenseRepository {
         ));
       }
     } catch (e) {
-      print('DÖNÜŞTÜRÜCÜ PROBLEMLİ');
+      print('Error getting expenses: $e');
     }
   }
 
