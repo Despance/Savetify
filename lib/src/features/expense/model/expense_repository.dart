@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
+import 'package:savetify/src/features/expense/model/expense_model.dart';
 
 class ExpenseRepository {
-  List<ExpenseModel> _expenses = [];
+  final List<ExpenseModel> _expenses = [];
 
   ExpenseRepository() {}
 
@@ -24,7 +24,7 @@ class ExpenseRepository {
         ));
       });
     } catch (e) {
-      print(e);
+      print('Error getting expenses: $e');
     }
   }
 

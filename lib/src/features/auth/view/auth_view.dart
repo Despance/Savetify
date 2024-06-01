@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:savetify/src/features/auth/view/sign_in_view.dart';
 import 'package:savetify/src/features/home/view/home_screen.dart';
 
@@ -31,27 +30,6 @@ class _AuthViewState extends State<AuthView> {
         });
       }
     });
-  }
-
-  Widget _homePageView(String title) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Hello $title !'),
-            ElevatedButton(
-              onPressed: () {
-                GoogleSignIn().signOut();
-                FirebaseAuth.instance.signOut();
-              },
-              child: const Text('Sign out'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override

@@ -1,9 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
-import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/home/view/main_screen.dart';
 import 'package:savetify/src/features/income/view/IncomeView.dart';
 import 'package:savetify/src/features/investment/view/InvestmentView.dart';

@@ -1,22 +1,15 @@
-import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
 import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
 import 'package:savetify/src/features/expense/view_model/ExpenseViewModel.dart';
-import 'package:savetify/src/theme/theme.dart';
 
 class AddExpense extends StatefulWidget {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  ExpenseModel? expenseModel;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+  final ExpenseModel? expenseModel;
 
   AddExpense({super.key, this.expenseModel});
 
@@ -93,7 +86,7 @@ class _AddExpenseState extends State<AddExpense> {
                       filled: true,
                       fillColor: theme.inputDecorationTheme.fillColor,
                       labelText: "Amount",
-                      labelStyle: textTheme.bodyText1,
+                      labelStyle: textTheme.bodyLarge,
                       prefixIcon: Icon(
                         CupertinoIcons.money_dollar,
                         color: Colors.grey[600],
@@ -103,9 +96,9 @@ class _AddExpenseState extends State<AddExpense> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter the amount",
-                      hintStyle: textTheme.bodyText2,
+                      hintStyle: textTheme.bodyMedium,
                     ),
-                    style: textTheme.bodyText1,
+                    style: textTheme.bodyLarge,
                     onChanged: (value) {
                       if (value.contains(',')) {
                         value = value.replaceAll(',', '.');
@@ -127,7 +120,7 @@ class _AddExpenseState extends State<AddExpense> {
                       filled: true,
                       fillColor: theme.inputDecorationTheme.fillColor,
                       labelText: "Description",
-                      labelStyle: textTheme.bodyText1,
+                      labelStyle: textTheme.bodyLarge,
                       prefixIcon: Icon(
                         CupertinoIcons.app_badge_fill,
                         color: Colors.grey[600],
@@ -137,9 +130,9 @@ class _AddExpenseState extends State<AddExpense> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter the description",
-                      hintStyle: textTheme.bodyText2,
+                      hintStyle: textTheme.bodyMedium,
                     ),
-                    style: textTheme.bodyText1,
+                    style: textTheme.bodyLarge,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -203,7 +196,7 @@ class _AddExpenseState extends State<AddExpense> {
                         filled: true,
                         fillColor: theme.inputDecorationTheme.fillColor,
                         labelText: "Category",
-                        labelStyle: textTheme.bodyText1,
+                        labelStyle: textTheme.bodyLarge,
                         prefixIcon: Icon(
                           CupertinoIcons.square_stack,
                           color: Colors.grey[600],
@@ -213,9 +206,9 @@ class _AddExpenseState extends State<AddExpense> {
                           borderSide: BorderSide.none,
                         ),
                         hintText: "Enter the category",
-                        hintStyle: textTheme.bodyText2,
+                        hintStyle: textTheme.bodyMedium,
                       ),
-                      style: textTheme.bodyText1,
+                      style: textTheme.bodyLarge,
                     ),
                   ),
                 ),
@@ -241,7 +234,7 @@ class _AddExpenseState extends State<AddExpense> {
                     filled: true,
                     fillColor: theme.inputDecorationTheme.fillColor,
                     labelText: "Date",
-                    labelStyle: textTheme.bodyText1,
+                    labelStyle: textTheme.bodyLarge,
                     prefixIcon: Icon(
                       CupertinoIcons.calendar_today,
                       color: Colors.grey[600],
@@ -251,9 +244,9 @@ class _AddExpenseState extends State<AddExpense> {
                       borderSide: BorderSide.none,
                     ),
                     hintText: "Enter the date",
-                    hintStyle: textTheme.bodyText2,
+                    hintStyle: textTheme.bodyMedium,
                   ),
-                  style: textTheme.bodyText1,
+                  style: textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
