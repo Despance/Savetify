@@ -324,10 +324,8 @@ class MainScreenState extends State<MainScreen> {
   Widget buildTransactionsList() {
     return expenseRepository!.getExpenses().isEmpty
         ? const Center(child: Text('No expenses found'))
-        : SingleChildScrollView(
+        : Expanded(
             child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
                 itemCount: expenseRepository!.getExpenses().length,
                 itemBuilder: (context, int i) {
                   return ExpenseCard(i);
