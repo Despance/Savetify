@@ -1,30 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:savetify/src/features/expense/model/expense_model.dart';
+import 'expense_model.dart';
 
 class ExpenseRepository {
   final List<ExpenseModel> _expenses = [];
 
-  ExpenseRepository() {}
+  ExpenseRepository();
 
-  getExpensesFromFirebase() async {
+  Future<void> getExpensesFromFirebase() async {
     try {
       var snapshot = await FirebaseFirestore.instance
           .collection('expenses')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('user_expenses')
           .get();
-      snapshot.docs.forEach((doc) {
+      _expenses.clear();
+      for (var doc in snapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+        double amount = (data['amount'] is int)
+            ? (data['amount'] as int).toDouble()
+            : data['amount'] as double;
         _expenses.add(ExpenseModel(
           id: doc.id,
-          description: doc['description'],
-          amount: doc['amount'],
-          date: doc['date'].toDate(),
-          category: doc['category'],
+          description: data['description'] ?? '',
+          amount: amount,
+          date: (data['date'] as Timestamp).toDate(),
+          category: data['category'] ?? '',
         ));
-      });
+      }
     } catch (e) {
-      print('Error getting expenses: $e');
+      print('DÖNÜŞTÜRÜCÜ PROBLEMLİ');
     }
   }
 
@@ -37,7 +42,7 @@ class ExpenseRepository {
     _expenses.add(expense);
   }
 
-  sendToFirebase(ExpenseModel expenseModel) async {
+  Future<void> sendToFirebase(ExpenseModel expenseModel) async {
     var snapshot = await FirebaseFirestore.instance
         .collection('expenses')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -52,7 +57,7 @@ class ExpenseRepository {
     _expenses.add(expenseModel);
   }
 
-  sendToFirebaseUpdate(ExpenseModel expenseModel) async {
+  Future<void> sendToFirebaseUpdate(ExpenseModel expenseModel) async {
     await FirebaseFirestore.instance
         .collection('expenses')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -81,6 +86,9 @@ class ExpenseRepository {
   }
 
   void updateExpense(ExpenseModel expense) {
-    _expenses[_expenses.indexWhere((e) => e.id == expense.id)] = expense;
+    int index = _expenses.indexWhere((e) => e.id == expense.id);
+    if (index != -1) {
+      _expenses[index] = expense;
+    }
   }
 }

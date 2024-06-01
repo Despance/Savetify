@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:savetify/src/features/expense/model/expense_model.dart';
 import 'package:savetify/src/features/expense/model/expense_repository.dart';
 import 'package:savetify/src/features/expense/view_model/ExpenseViewModel.dart';
@@ -254,25 +254,32 @@ class _AddExpenseState extends State<AddExpense> {
                   height: kToolbarHeight,
                   child: TextButton(
                     onPressed: () {
-                      widget.expenseModel != null
-                          ? ExpenseRepository().sendToFirebaseUpdate(
-                              ExpenseModel(
-                                id: widget.expenseModel!.id,
-                                description: descriptionController.text,
-                                amount: double.parse(expenseController.text),
-                                date: selectedDate,
-                                category: categoryController.text,
-                              ),
-                            )
-                          : ExpenseRepository().sendToFirebase(
-                              ExpenseModel(
-                                description: descriptionController.text,
-                                amount: double.parse(expenseController.text),
-                                date: selectedDate,
-                                category: categoryController.text,
-                              ),
-                            );
-                      Navigator.pop(context);
+                      try {
+                        double amount = double.parse(expenseController.text);
+                        widget.expenseModel != null
+                            ? ExpenseRepository().sendToFirebaseUpdate(
+                                ExpenseModel(
+                                  id: widget.expenseModel!.id,
+                                  description: descriptionController.text,
+                                  amount: amount,
+                                  date: selectedDate,
+                                  category: categoryController.text,
+                                ),
+                              )
+                            : ExpenseRepository().sendToFirebase(
+                                ExpenseModel(
+                                  description: descriptionController.text,
+                                  amount: amount,
+                                  date: selectedDate,
+                                  category: categoryController.text,
+                                ),
+                              );
+                        Navigator.pop(context);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Invalid amount')),
+                        );
+                      }
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: theme.primaryColor,
