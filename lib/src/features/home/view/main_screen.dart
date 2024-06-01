@@ -443,7 +443,7 @@ class MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        expenseRepository!.getExpenses()[i].amount.toString(),
+                        "₺ ${expenseRepository!.getExpenses()[i].amount.toString()}",
                         style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,

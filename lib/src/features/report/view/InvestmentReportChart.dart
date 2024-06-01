@@ -111,7 +111,7 @@ class InvestmentPieChart extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Text(
-              '${investment.name}: \$${investment.value} (${percentage.toStringAsFixed(1)}%)',
+              '${investment.name}: ₺ ${investment.value} (${percentage.toStringAsFixed(1)}%)',
               style: TextStyle(fontSize: fontSize),
             ),
           );
@@ -119,7 +119,7 @@ class InvestmentPieChart extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
-            'Total Value: \$${totalValue.toStringAsFixed(2)}',
+            'Total Value: ₺ ${totalValue.toStringAsFixed(2)}',
             style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
           ),
         ),
