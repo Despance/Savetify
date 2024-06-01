@@ -29,7 +29,8 @@ class ExpenseRepository {
   }
 
   List<ExpenseModel> getExpenses() {
-    return _expenses.reversed.toList();
+    _expenses.sort((a, b) => b.date.compareTo(a.date));
+    return _expenses;
   }
 
   void addExpense(ExpenseModel expense) {
