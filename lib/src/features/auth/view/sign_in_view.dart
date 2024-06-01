@@ -208,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<UserCredential> _signInWithGoogle() async {
+  Future<void> _signInWithGoogle() async {
     var userCredenitals;
     try {
       if (kIsWeb) {
@@ -231,7 +231,6 @@ class _LoginPageState extends State<LoginPage> {
             (route) => false);
       }
     }
-    return userCredenitals;
   }
 
   Future<UserCredential> _windowsSignInWithGoogle() async {
@@ -242,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future _signInWithEmailAndPassword() async {

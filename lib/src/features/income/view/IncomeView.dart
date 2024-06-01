@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:savetify/src/features/income/model/IncomeModel.dart';
 import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';
+import 'package:savetify/src/theme/theme.dart';
 
 class IncomePage extends StatefulWidget {
   const IncomePage({super.key});
@@ -53,6 +54,7 @@ class IncomePageState extends State<IncomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: SavetifyTheme.lightTheme.primaryColor,
         onPressed: () => addIncome(),
         heroTag: 'addIncome',
         tooltip: 'Add Income',

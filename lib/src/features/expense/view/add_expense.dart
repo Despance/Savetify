@@ -63,25 +63,23 @@ class _AddExpenseState extends State<AddExpense> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: theme.colorScheme.background,
-        appBar: AppBar(
-          backgroundColor: theme.secondaryHeaderColor,
-        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Add Expense",
-                  style: textTheme.headline6?.copyWith(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text("Add Expense",
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: Theme.of(context).primaryColor),
+                        textAlign: TextAlign.center)),
                 const SizedBox(height: 16),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: MediaQuery.of(context).size.width,
                   child: TextFormField(
                     controller: expenseController,
                     keyboardType:

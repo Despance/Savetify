@@ -48,68 +48,83 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: FutureBuilder(
-          future: initPage(),
-          builder: (context, snapshot) {
-            return snapshot.connectionState == ConnectionState.waiting
-                ? const Center(child: CircularProgressIndicator())
-                : LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (constraints.maxWidth > 600) {
-                        // Larger screen layout
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 10),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    buildHeader(),
-                                    const SizedBox(height: 20),
-                                    buildBalanceCard(),
-                                  ],
-                                ),
+      child: Scaffold(
+          body: FutureBuilder(
+              future: initPage(),
+              builder: (context, snapshot) {
+                return snapshot.connectionState == ConnectionState.waiting
+                    ? const Center(child: CircularProgressIndicator())
+                    : LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth > 600) {
+                            // Larger screen layout
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 10),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        buildHeader(),
+                                        const SizedBox(height: 20),
+                                        buildBalanceCard(),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 20),
+                                        buildTransactionsHeader(),
+                                        const SizedBox(height: 10),
+                                        buildTransactionsList(),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 20),
-                                    buildTransactionsHeader(),
-                                    const SizedBox(height: 10),
-                                    buildTransactionsList(),
-                                  ],
-                                ),
+                            );
+                          } else {
+                            // Small screen layout
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 10),
+                              child: Column(
+                                children: [
+                                  buildHeader(),
+                                  const SizedBox(height: 20),
+                                  buildBalanceCard(),
+                                  const SizedBox(height: 20),
+                                  buildTransactionsHeader(),
+                                  const SizedBox(height: 10),
+                                  buildTransactionsList(),
+                                ],
                               ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        // Small screen layout
-                        return SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 10),
-                            child: Column(
-                              children: [
-                                buildHeader(),
-                                const SizedBox(height: 20),
-                                buildBalanceCard(),
-                                const SizedBox(height: 20),
-                                buildTransactionsHeader(),
-                                const SizedBox(height: 10),
-                                buildTransactionsList(),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  );
-          }),
+                            );
+                          }
+                        },
+                      );
+              }),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: SavetifyTheme.lightTheme.primaryColor,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddExpense();
+                  },
+                ),
+              ).then((value) => Update());
+            },
+            child: const Icon(Icons.add),
+          )),
     );
   }
 
@@ -308,13 +323,15 @@ class MainScreenState extends State<MainScreen> {
   Widget buildTransactionsList() {
     return expenseRepository!.getExpenses().isEmpty
         ? const Center(child: Text('No expenses found'))
-        : ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: expenseRepository!.getExpenses().length,
-            itemBuilder: (context, int i) {
-              return ExpenseCard(i);
-            });
+        : SingleChildScrollView(
+            child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: expenseRepository!.getExpenses().length,
+                itemBuilder: (context, int i) {
+                  return ExpenseCard(i);
+                }),
+          );
   }
 
   Widget ExpenseCard(int i) {
