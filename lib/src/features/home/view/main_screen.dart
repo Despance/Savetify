@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
+import 'package:savetify/src/features/expense/model/expense_repository.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
 import 'package:savetify/src/features/income/model/IncomeRepository.dart';
 import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';

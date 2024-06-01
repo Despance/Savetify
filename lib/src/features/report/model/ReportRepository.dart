@@ -1,5 +1,5 @@
-import 'package:savetify/src/features/expense/model/ExpenseModel.dart';
-import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
+import 'package:savetify/src/features/expense/model/expense_model.dart';
+import 'package:savetify/src/features/expense/model/expense_repository.dart';
 import 'package:savetify/src/features/income/model/IncomeModel.dart';
 import 'package:savetify/src/features/income/model/IncomeRepository.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
@@ -21,9 +21,11 @@ class ReportRepository {
   List<InvestmentModel> getInvestments() {
     return investments;
   }
+
   List<IncomeModel> getIncomes() {
     return incomes;
   }
+
   List<ExpenseModel> getExpenses() {
     return expenses;
   }
