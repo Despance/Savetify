@@ -2,11 +2,13 @@ import 'package:savetify/src/features/income/model/IncomeModel.dart';
 import 'package:savetify/src/features/income/model/IncomeRepository.dart';
 
 class IncomeViewModel {
-  IncomeRepository _incomeRepository = IncomeRepository();
+  final IncomeRepository _incomeRepository;
+
+  IncomeViewModel({required IncomeRepository incomeRepository})
+      : _incomeRepository = incomeRepository;
 
   Future<void> getIncomesFromFirebase() async {
     await _incomeRepository.getIncomesFromFirebase();
-    _incomeRepository.getIncomes();
   }
 
   Future<void> addIncomesToFirebase(IncomeModel incomeModel) async {

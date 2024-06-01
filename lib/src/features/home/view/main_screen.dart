@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:savetify/src/features/expense/model/ExpenseRepository.dart';
 import 'package:savetify/src/features/expense/view/add_expense.dart';
+import 'package:savetify/src/features/income/model/IncomeRepository.dart';
 import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';
 import 'package:savetify/src/features/profile/model/user.dart';
 import 'package:savetify/src/features/profile/view/profile_view.dart';
@@ -23,7 +24,7 @@ class MainScreenState extends State<MainScreen> {
   late String result;
 
   initPage() async {
-    incomeViewModel = IncomeViewModel();
+    incomeViewModel = IncomeViewModel(incomeRepository: IncomeRepository());
     userModel = await const ProfileView().getUser();
     expenseRepository = ExpenseRepository();
     await expenseRepository!.getExpensesFromFirebase();

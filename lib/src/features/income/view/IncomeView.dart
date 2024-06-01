@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:savetify/src/features/income/model/IncomeModel.dart';
+import 'package:savetify/src/features/income/model/IncomeRepository.dart';
 import 'package:savetify/src/features/income/view_model/IncomeViewModel.dart';
 
 class IncomePage extends StatefulWidget {
@@ -13,7 +14,8 @@ class IncomePage extends StatefulWidget {
 }
 
 class IncomePageState extends State<IncomePage> {
-  final IncomeViewModel incomeViewModel = IncomeViewModel();
+  final IncomeViewModel incomeViewModel =
+      IncomeViewModel(incomeRepository: IncomeRepository());
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
   late DateTime _selectedDate;

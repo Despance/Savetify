@@ -5,21 +5,25 @@ import 'package:savetify/src/features/income/model/IncomeModel.dart';
 class IncomeRepository {
   List<IncomeModel> incomes = [];
 
-  getIncomesFromFirebase() async {
+  Future<void> getIncomesFromFirebase() async {
     try {
-      incomes.clear();
+      incomes.clear(); // Clear the list to prevent duplication
       var snapshot = await FirebaseFirestore.instance
           .collection('incomes')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('user_incomes')
           .get();
       snapshot.docs.forEach((doc) {
-        incomes.add(IncomeModel(
+        // Check if the income is already in the list before adding it
+        var income = IncomeModel(
           id: doc.id,
           description: doc['description'],
           amount: doc['amount'],
           date: doc['date'].toDate(),
-        ));
+        );
+        if (!incomes.any((i) => i.id == income.id)) {
+          incomes.add(income);
+        }
       });
     } catch (e) {
       print(e);
@@ -30,7 +34,7 @@ class IncomeRepository {
     return incomes;
   }
 
-  addToFireBase(IncomeModel incomeModel) async {
+  Future<void> addToFireBase(IncomeModel incomeModel) async {
     try {
       await FirebaseFirestore.instance
           .collection('incomes')
@@ -46,7 +50,7 @@ class IncomeRepository {
     }
   }
 
-  deleteIncomeFromFirebase(IncomeModel incomeModel) async {
+  Future<void> deleteIncomeFromFirebase(IncomeModel incomeModel) async {
     try {
       await FirebaseFirestore.instance
           .collection('incomes')
@@ -54,7 +58,7 @@ class IncomeRepository {
           .collection('user_incomes')
           .doc(incomeModel.id)
           .delete();
-      incomes.remove(incomeModel);
+      incomes.removeWhere((i) => i.id == incomeModel.id); // Remove by ID
     } catch (e) {
       print(e);
     }
