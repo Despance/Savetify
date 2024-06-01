@@ -13,20 +13,23 @@ class IncomeRepository {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('user_incomes')
           .get();
-      snapshot.docs.forEach((doc) {
-        // Check if the income is already in the list before adding it
+      for (var doc in snapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+        double amount = (data['amount'] is int)
+            ? (data['amount'] as int).toDouble()
+            : data['amount'] as double;
         var income = IncomeModel(
           id: doc.id,
-          description: doc['description'],
-          amount: doc['amount'],
-          date: doc['date'].toDate(),
-        );
+          description: doc['description'] ?? '',
+          amount: amount,
+          date: (doc['date'] as Timestamp).toDate(),
+        ); // Check if the income is already in the list before adding it
         if (!incomes.any((i) => i.id == income.id)) {
           incomes.add(income);
         }
-      });
+      }
     } catch (e) {
-      print(e);
+      print('Error getting incomes: $e');
     }
   }
 
