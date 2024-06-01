@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:savetify/src/features/investment/model/InvestmentModel.dart';
 
 class InvestmentPieChart extends StatelessWidget {
@@ -42,29 +44,25 @@ class InvestmentPieChart extends StatelessWidget {
             ],
           );
         } else {
-          return Builder(builder: (context) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    height: 300, // Fixed height for smaller screens
-                    child: PieChart(
-                      PieChartData(
-                        sections: _getSections(constraints),
-                        borderData: FlBorderData(show: false),
-                        sectionsSpace: 0,
-                        centerSpaceRadius: 40, // Fixed center space radius
-                      ),
-                    ),
+          return Column(
+            children: [
+              Expanded(
+                flex: 1, // Fixed height for smaller screens
+                child: PieChart(
+                  PieChartData(
+                    sections: _getSections(constraints),
+                    borderData: FlBorderData(show: false),
+                    sectionsSpace: 0,
+                    centerSpaceRadius: 40, // Fixed center space radius
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: _buildReport(constraints),
-                  ),
-                ],
+                ),
               ),
-            );
-          });
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _buildReport(constraints),
+              ),
+            ],
+          );
         }
       },
     );
@@ -118,10 +116,12 @@ class InvestmentPieChart extends StatelessWidget {
             ),
           );
         }).toList(),
-        SizedBox(height: 16),
-        Text(
-          'Total Value: \$${totalValue.toStringAsFixed(2)}',
-          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(
+            'Total Value: \$${totalValue.toStringAsFixed(2)}',
+            style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );

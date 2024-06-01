@@ -32,7 +32,7 @@ class IncomeRepository {
 
   addToFireBase(IncomeModel incomeModel) async {
     try {
-      var snapshot = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('incomes')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('user_incomes')
