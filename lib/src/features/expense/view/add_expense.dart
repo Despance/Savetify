@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,12 +56,15 @@ class _AddExpenseState extends State<AddExpense> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: SavetifyTheme.lightTheme.colorScheme.background,
+        backgroundColor: theme.colorScheme.background,
         appBar: AppBar(
-          backgroundColor: SavetifyTheme.lightTheme.secondaryHeaderColor,
+          backgroundColor: theme.secondaryHeaderColor,
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -70,9 +72,12 @@ class _AddExpenseState extends State<AddExpense> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   "Add Expense",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  style: textTheme.headline6?.copyWith(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -82,13 +87,15 @@ class _AddExpenseState extends State<AddExpense> {
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(
-                          r'[0-9,.]')), // Sadece rakam, virgül ve nokta girilmesine izin verir
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'[0-9,.]'),
+                      ), // Only allows digits, comma, and period
                     ],
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: theme.inputDecorationTheme.fillColor,
                       labelText: "Amount",
+                      labelStyle: textTheme.bodyText1,
                       prefixIcon: Icon(
                         CupertinoIcons.money_dollar,
                         color: Colors.grey[600],
@@ -98,7 +105,9 @@ class _AddExpenseState extends State<AddExpense> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter the amount",
+                      hintStyle: textTheme.bodyText2,
                     ),
+                    style: textTheme.bodyText1,
                     onChanged: (value) {
                       if (value.contains(',')) {
                         value = value.replaceAll(',', '.');
@@ -115,21 +124,25 @@ class _AddExpenseState extends State<AddExpense> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextFormField(
-                      controller: descriptionController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: "description",
-                        prefixIcon: Icon(
-                          CupertinoIcons.app_badge_fill,
-                          color: Colors.grey[600],
-                        ),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: "Enter the description",
-                      )),
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: theme.inputDecorationTheme.fillColor,
+                      labelText: "Description",
+                      labelStyle: textTheme.bodyText1,
+                      prefixIcon: Icon(
+                        CupertinoIcons.app_badge_fill,
+                        color: Colors.grey[600],
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: "Enter the description",
+                      hintStyle: textTheme.bodyText2,
+                    ),
+                    style: textTheme.bodyText1,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 GestureDetector(
@@ -190,8 +203,9 @@ class _AddExpenseState extends State<AddExpense> {
                       controller: categoryController,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: theme.inputDecorationTheme.fillColor,
                         labelText: "Category",
+                        labelStyle: textTheme.bodyText1,
                         prefixIcon: Icon(
                           CupertinoIcons.square_stack,
                           color: Colors.grey[600],
@@ -201,7 +215,9 @@ class _AddExpenseState extends State<AddExpense> {
                           borderSide: BorderSide.none,
                         ),
                         hintText: "Enter the category",
+                        hintStyle: textTheme.bodyText2,
                       ),
+                      style: textTheme.bodyText1,
                     ),
                   ),
                 ),
@@ -225,8 +241,9 @@ class _AddExpenseState extends State<AddExpense> {
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: theme.inputDecorationTheme.fillColor,
                     labelText: "Date",
+                    labelStyle: textTheme.bodyText1,
                     prefixIcon: Icon(
                       CupertinoIcons.calendar_today,
                       color: Colors.grey[600],
@@ -236,7 +253,9 @@ class _AddExpenseState extends State<AddExpense> {
                       borderSide: BorderSide.none,
                     ),
                     hintText: "Enter the date",
+                    hintStyle: textTheme.bodyText2,
                   ),
+                  style: textTheme.bodyText1,
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
@@ -265,7 +284,7 @@ class _AddExpenseState extends State<AddExpense> {
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: SavetifyTheme.lightTheme.primaryColor,
+                      backgroundColor: theme.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),

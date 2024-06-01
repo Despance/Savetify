@@ -42,25 +42,29 @@ class InvestmentPieChart extends StatelessWidget {
             ],
           );
         } else {
-          return Column(
-            children: [
-              Container(
-                height: 300, // Fixed height for smaller screens
-                child: PieChart(
-                  PieChartData(
-                    sections: _getSections(constraints),
-                    borderData: FlBorderData(show: false),
-                    sectionsSpace: 0,
-                    centerSpaceRadius: 40, // Fixed center space radius
+          return Builder(builder: (context) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: 300, // Fixed height for smaller screens
+                    child: PieChart(
+                      PieChartData(
+                        sections: _getSections(constraints),
+                        borderData: FlBorderData(show: false),
+                        sectionsSpace: 0,
+                        centerSpaceRadius: 40, // Fixed center space radius
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildReport(constraints),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: _buildReport(constraints),
-              ),
-            ],
-          );
+            );
+          });
         }
       },
     );
