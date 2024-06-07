@@ -14,11 +14,11 @@ Savetify is a cross-platform mobile and web application designed to simplify per
 - Data Visualization
 
 ## Technologies Used
-- Frontend: Flutter
-- Backend: Firebase (Authentication, Firestore)
-- Version Control: Git
+- <img src="https://img.icons8.com/color/48/000000/flutter.png"/> Flutter
+- <img src="https://img.icons8.com/color/48/000000/firebase.png"/> Firebase (Authentication, Firestore)
+- <img src="https://img.icons8.com/color/48/000000/git.png"/> Git
 - Design Patterns: MVVM, Repository, Modular programming
-- Development Methodology: Waterfall 
+- Development Methodology: Waterfall
 
 ## Screenshots
 ![Login Screen](screenshots/login.png)
