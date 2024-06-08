@@ -26,6 +26,7 @@ Savetify is a cross-platform mobile and web application designed to simplify per
 ![Expense Tracking](screenshots/expense_web.png)
 ![Income Tracking](screenshots/income_web.png)
 ![Investment Tracking](screenshots/investment_web.png)
+![Investment Tracking](screenshots/investment_form.png)
 ![Reports](screenshots/reports_web.png)
 
 
