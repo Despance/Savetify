@@ -37,6 +37,14 @@ Savetify is a cross-platform mobile and web application designed to simplify per
 ![Investment Tracking](screenshots/investment.png)
 ![Reports](screenshots/reports.png)
 
+
+![Login Screen](screenshots/login_ios.png)
+![Dashboard](screenshots/dashboard_ios.png)
+![Expense Tracking](screenshots/expense_ios.png)
+![Income Tracking](screenshots/income_ios.png)
+![Investment Tracking](screenshots/investment_ios.png)
+![Reports](screenshots/reports_ios.png)
+
 ## Contributors
 - Mustafa Emir Uyar - 150120007
 - Muhammed Hayta - 150121068
