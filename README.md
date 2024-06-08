@@ -21,6 +21,14 @@ Savetify is a cross-platform mobile and web application designed to simplify per
 - Development Methodology: Waterfall
 
 ## Screenshots
+![Login Screen](screenshots/login_web.png)
+![Dashboard](screenshots/dashboard_web.png)
+![Expense Tracking](screenshots/expense_web.png)
+![Income Tracking](screenshots/income_web.png)
+![Investment Tracking](screenshots/investment_web.png)
+![Reports](screenshots/reports_web.png)
+
+
 ![Login Screen](screenshots/login.png)
 ![Dashboard](screenshots/dashboard.png)
 ![Expense Tracking](screenshots/expense.png)
